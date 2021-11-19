@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar</title>
+</head>
+<body>
+    <h1>Usuários adicionados</h1>
+
+    {% if ativos %}
+        <h4>Usuários ativos</h4>
+    {% else %}
+        <h4>Usuários inativos</h4>
+    {% endif %}
+
+    {% if not lista_usuarios %}
+
+        <h4>Não há usuários cadastrados.</h4>
+
+    {% else %}
+
+        <ul>
+            {% for usuario in lista_usuarios %}
+                <li>{{usuario}}</li>
+            {% endfor %}
+        </ul>
+
+    {% endif %}
+
+    <a href="{% url 'usuario:logout' %}">Logout</a>
+</body>
+</html>
