@@ -35,6 +35,7 @@ def mudar_status(request, pk):
     usuario = Usuario.objects.get(pk=pk)
     usuario.is_active = not usuario.is_active
     usuario.save()
+
     return redirect('usuario:listar_ativos')
 
 @login_required
@@ -42,6 +43,7 @@ def mudar_status_admin(request, pk):
     usuario = Usuario.objects.get(pk=pk)
     usuario.is_superuser = not usuario.is_superuser
     usuario.save()
+    
     return redirect('usuario:listar_ativos')
 
 class CadastrarUsuario(generic.CreateView):
@@ -58,7 +60,6 @@ class EditarUsuario(LoginRequiredMixin, generic.UpdateView):
 class DetalheUsuario(LoginRequiredMixin, generic.DetailView):
     model = Usuario
     template_name = "Usuario/detalhes.html"
-
     # usuario
 
 # class DeletarUser(LoginRequiredMixin, generic.DeleteView):

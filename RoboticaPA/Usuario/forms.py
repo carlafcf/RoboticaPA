@@ -9,14 +9,14 @@ from Usuario.models import Usuario
 class FormCriarUsuario(auth_forms.UserCreationForm):
 
     class Meta:
-        # fields = ('cidade', 'estado')
-        fields = ('username', 'first_name', 'last_name', 'email', 'cidade', 'estado', 'password1', 'password2')
+        # fields = ('username', 'first_name', 'last_name', 'email', 'cidade', 'estado', 'password1', 'password2')
+        fields = ('username', 'email', 'password1', 'password2')
         model = Usuario
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['first_name'].label = 'Nome'
-        self.fields['last_name'].label = 'Sobrenome'
+        # self.fields['first_name'].label = 'Nome'
+        # self.fields['last_name'].label = 'Sobrenome'
         self.fields['username'].label = 'Nome de usuário'
         self.fields['email'].label = 'E-mail'
         self.fields['password1'].label = 'Senha'

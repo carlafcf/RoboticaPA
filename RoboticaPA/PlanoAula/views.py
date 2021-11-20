@@ -1,8 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 
 from PlanoAula.models import PlanoAula
+
+def home(request):
+    if (not request.user.first_name or not request.user.last_name):
+        return redirect('usuario:editar', pk = request.user.pk)
+    return render(request, "home.html")
 
 class Criar(CreateView):
     model = PlanoAula
