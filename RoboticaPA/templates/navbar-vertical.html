@@ -5,9 +5,14 @@
  <nav class="navbar-vertical navbar">
     <div class="nav-scroller">
         <!-- Brand logo -->
-        <a class="navbar-brand" href="">
-            <img src="{% static 'src/assets/images/robo_icone.png' %}" alt="" />
-        </a>
+        <a class="navbar-brand" href="{% url 'home' %}" style="color:#fff; font-weight: bold;">
+            <img src="{% static 'src/assets/images/robo_icone.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
+            Robótica
+          </a>
+        <!-- <a class="navbar-brand" href="{% url 'home' %}">
+            <img src="{% static 'src/assets/images/robo_icone.png' %}" alt="" class="d-inline-block align-top" />
+            <h3 style="color:#624BFF">Robótica</h3>
+        </a> -->
         <!-- Navbar nav -->
         <ul class="navbar-nav flex-column" id="sideNavbar">
             <li class="nav-item">
