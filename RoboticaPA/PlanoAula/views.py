@@ -1,23 +1,12 @@
-<<<<<<< HEAD
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-=======
-from types import GenericAlias
-from django import forms
-from django.forms import Form
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404, render
->>>>>>> plano_aula
+
 from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from PlanoAula.models import PlanoAula
-from django.http import HttpResponse 
-import datetime
 from PlanoAula import forms
-
-
 
 @login_required
 def home(request):
