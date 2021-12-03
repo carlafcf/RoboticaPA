@@ -1,20 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listar</title>
-</head>
-<body>
-    <h1>Usuários adicionados</h1>
+{% extends "Base/base.html" %}
 
+{% block titulo %}
+Usuários
+{% endblock %}
+
+{% block subtitulo %}
     {% if ativos %}
-        <h4>Usuários ativos</h4>
+        Ativos
     {% else %}
-        <h4>Usuários inativos</h4>
+        Inativos
     {% endif %}
+{% endblock %}
 
+{% block titulo_lateral %}
+<a href="#" class="btn btn-primary">Button</a>
+{% endblock %}
+
+{% block conteudo %}
     {% if not lista_usuarios %}
 
         <h4>Não há usuários cadastrados.</h4>
@@ -30,5 +32,4 @@
     {% endif %}
 
     <a href="{% url 'usuario:logout' %}">Logout</a>
-</body>
-</html>
+{% endblock %}

@@ -1,16 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listar</title>
-</head>
-<body>
-    <h1>Usuários adicionados</h1>
+{% extends "Base/base.html" %}
 
-    <h5>Usuario: {{ usuario.username }} </h5>
-    <h5>Nome: {{ usuario.first_name }} {{ usuario.last_name }} </h5>
-    <h5>E-mail {{ usuario.email }} </h5>
-</body>
-</html>
+{% block titulo %}
+{{ usuario.first_name }} {{ usuario.last_name }}
+{% endblock %}
+
+{% block subtitulo %}
+Detalhes do usuário
+{% endblock %}
+
+{% block titulo_lateral %}
+<button class="btn btn-primary">Novo usuário</button>
+{% endblock %}
+
+{% block conteudo %}
+<h5>Usuario: {{ usuario.username }} </h5>
+<h5>Nome: {{ usuario.first_name }} {{ usuario.last_name }} </h5>
+<h5>E-mail {{ usuario.email }} </h5>
+{% endblock %}

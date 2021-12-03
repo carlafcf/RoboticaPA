@@ -46,21 +46,28 @@ def mudar_status_admin(request, pk):
     
     return redirect('usuario:listar_ativos')
 
-class CadastrarUsuario(generic.CreateView):
+class Cadastrar(generic.CreateView):
     form_class = forms.FormCriarUsuario
     template_name = 'Usuario/cadastrar.html'
-    success_url = reverse_lazy('usuario:listar_ativos')
+    success_url = reverse_lazy('usuario:login')
 
-class EditarUsuario(LoginRequiredMixin, generic.UpdateView):
+class CompletarCadastro(LoginRequiredMixin, generic.UpdateView):
+    model = Usuario
+    form_class = forms.FormCompletarCadastro
+    template_name = 'Usuario/completar_cadastro.html'
+    success_url = reverse_lazy('home')
+
+class Editar(LoginRequiredMixin, generic.UpdateView):
     model = Usuario
     form_class = forms.FormEditarUsuario
     template_name = 'Usuario/editar.html'
     success_url = reverse_lazy('usuario:listar_ativos')
 
-class DetalheUsuario(LoginRequiredMixin, generic.DetailView):
+class Detalhes(LoginRequiredMixin, generic.DetailView):
     model = Usuario
     template_name = "Usuario/detalhes.html"
     # usuario
+    # object
 
 # class DeletarUser(LoginRequiredMixin, generic.DeleteView):
 #     model = Usuario

@@ -22,6 +22,19 @@ class FormCriarUsuario(auth_forms.UserCreationForm):
         self.fields['password1'].label = 'Senha'
         self.fields['password2'].label = 'Confirmar senha'
 
+class FormCompletarCadastro(ModelForm):
+
+    class Meta:
+        model = Usuario
+        fields = ('first_name', 'last_name', 'cidade', 'estado')
+
+    def save(self, commit=True):
+        # Save the provided password in hashed format
+        user = super(FormCompletarCadastro, self).save(commit=False)
+        if commit:
+            user.save()
+        return user
+
 class FormEditarUsuario(ModelForm):
     password1 = forms.CharField(label='Senha', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Confirmar senha', widget=forms.PasswordInput)
