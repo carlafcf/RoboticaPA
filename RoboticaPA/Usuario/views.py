@@ -69,8 +69,8 @@ class Detalhes(LoginRequiredMixin, generic.DetailView):
     # usuario
     # object
 
-# class DeletarUser(LoginRequiredMixin, generic.DeleteView):
-#     model = Usuario
-#     template_name = 'Usuario/listarUser.html'
-#     success_url = reverse_lazy('usuario:listar')
+class DeletarUser(LoginRequiredMixin, generic.DeleteView):
+     model = Usuario
+     template_name = 'Usuario/deletar.html'
+     success_url = reverse_lazy('usuario:listar_ativos')
 
