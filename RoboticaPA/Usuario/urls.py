@@ -15,5 +15,5 @@ urlpatterns = [
     path('detalhes/<int:pk>', views.DetalheUsuario.as_view(), name='detalhes'),
     path('mudar_status/<int:pk>', views.mudar_status, name='mudar_status'),
     path('mudar_status_admin/<int:pk>', views.mudar_status_admin, name='mudar_status_admin'),
-    # path('deletarUsuario/<int:pk>', views.DeletarUser.as_view(), name='deletarUser'),
+    path('deletarUsuario/<int:pk>', views.DeletarUser.as_view(), name='deletar'),
 ]

@@ -1,8 +1,17 @@
-from django.shortcuts import render
+from types import GenericAlias
+from django import forms
+from django.forms import Form
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView
-
+from django.views import generic
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from PlanoAula.models import PlanoAula
+from django.http import HttpResponse 
+import datetime
+from PlanoAula import forms
+
+
 
 class Criar(CreateView):
     model = PlanoAula
@@ -20,3 +29,21 @@ def listar(request):
     }
 
     return render(request, "PlanoAula/listar.html", informacoes)
+
+class Editarplano_aula(UpdateView):
+        model = PlanoAula
+        form_class = forms.FormEditarPlano_aula
+        template_name = 'PlanoAula/editar.html'
+        success_url = reverse_lazy('plano_aula:listar')
+        fieelds = ["titulo", "contextualizacao", "descricao_atividade"]
+
+#class Detalhe(generic.DetailView):
+ #   model = PlanoAula
+  #  template_name = "PlanoAula/detalhes.html"        
+
+class Deletarplano_aula(DeleteView):
+        model = PlanoAula
+        template_name = 'PlanoAula/deletar.html'
+        success_url = reverse_lazy('plano_aula:listar')
+
+

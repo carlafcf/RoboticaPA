@@ -1,6 +1,6 @@
 from django.db import models
 
-# from Usuario.models import Usuario
+
 
 class PlanoAula(models.Model):
     titulo = models.CharField(max_length=200, verbose_name="Título")
