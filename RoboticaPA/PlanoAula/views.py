@@ -30,7 +30,7 @@ def listar(request):
 
     return render(request, "PlanoAula/listar.html", informacoes)
 
-class Editarplano_aula(UpdateView):
+class Editar(UpdateView):
         model = PlanoAula
         form_class = forms.FormEditarPlano_aula
         template_name = 'PlanoAula/editar.html'
@@ -41,7 +41,7 @@ class Editarplano_aula(UpdateView):
  #   model = PlanoAula
   #  template_name = "PlanoAula/detalhes.html"        
 
-class Deletarplano_aula(DeleteView):
+class Deletar(DeleteView):
         model = PlanoAula
         template_name = 'PlanoAula/deletar.html'
         success_url = reverse_lazy('plano_aula:listar')
