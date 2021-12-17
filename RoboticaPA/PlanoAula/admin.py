@@ -1,3 +1,4 @@
 from django.contrib import admin
+from PlanoAula.models import PlanoAula
 
-# Register your models here.
+admin.site.register(PlanoAula)
