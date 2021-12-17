@@ -18,6 +18,7 @@ def home(request):
         return redirect('usuario:completar_cadastro', pk = request.user.pk)
     return render(request, "Base/home.html")
 
+class Criar(generic.CreateView, LoginRequiredMixin):
     model = PlanoAula
     fields = ['titulo', 'contextualizacao', 'descricao_atividade']
     template_name = 'PlanoAula/criar.html'
