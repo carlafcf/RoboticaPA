@@ -2,8 +2,6 @@ from django.contrib.auth import forms as auth_forms
 from django import forms
 from django.forms import ModelForm
 
-###from RoboticaPA.RoboticaPA.PlanoAula.models import PlanoAula
-
 from PlanoAula.models import PlanoAula
 
 
