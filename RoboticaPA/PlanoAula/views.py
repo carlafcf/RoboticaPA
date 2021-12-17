@@ -1,6 +1,9 @@
+from django import forms
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.views import generic
 from django.views.generic.edit import CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from PlanoAula.models import PlanoAula
 
@@ -20,3 +23,14 @@ def listar(request):
     }
 
     return render(request, "PlanoAula/listar.html", informacoes)
+
+class EditarAula(LoginRequiredMixin, generic.UpdateView):
+    model = PlanoAula
+    form_class = forms.FormEditarPlano_aula
+    template_name = 'Plano_aula/editar.html'
+    success_url = reverse_lazy('plano_aula:listar')
+
+
+class DetalhesPlanoAula(LoginRequiredMixin, generic.DetailView):
+    model = PlanoAula
+    template_name = "Plano_aula/detalhes.html"

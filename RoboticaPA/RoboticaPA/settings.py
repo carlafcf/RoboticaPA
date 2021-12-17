@@ -135,6 +135,8 @@ LOGIN_URL = 'usuario:login'
 LOGIN_REDIRECT_URL = 'usuario:listar_ativos'
 LOGOUT_REDIRECT_URL = 'usuario:login'
 
+LOGIN_REDIRECT_URL = 'plano_aula:listar'
+
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_PORT = 587
