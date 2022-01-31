@@ -61,7 +61,18 @@ class Editar(LoginRequiredMixin, generic.UpdateView):
     model = Usuario
     form_class = forms.FormEditarUsuario
     template_name = 'Usuario/editar.html'
-    success_url = reverse_lazy('usuario:listar_ativos')
+
+    # def form_valid(self, form):
+    #     redirect = form.cleaned_data.get('next')
+    #     print(redirect)
+    #     if redirect:
+    #         self.success_url = redirect
+    #     return super(Editar, self).form_valid(form)
+    
+    def get_success_url(self):
+        return self.request.GET.get('next', None)
+
+    # success_url = reverse_lazy('usuario:listar_ativos')
 
 class Detalhes(LoginRequiredMixin, generic.DetailView):
     model = Usuario

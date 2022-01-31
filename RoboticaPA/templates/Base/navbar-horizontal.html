@@ -1,5 +1,7 @@
 {% load static %}
 
+{% load info_usuario %}
+
 <div class="header">
     <!-- navbar -->
     <nav class="navbar-classic navbar navbar-expand-lg">
@@ -23,7 +25,7 @@
           <a class="rounded-circle" href="#" role="button" id="dropdownUser"
             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <div class="avatar avatar-md avatar-indicators avatar-online">
-              <img alt="avatar" src="{% static 'src/assets/images/avatar/avatar-1.jpg' %}" class="rounded-circle" />
+              <img alt="avatar" src="{% avatar user.username %}" class="rounded-circle" />
             </div>
           </a>
           <div class="dropdown-menu dropdown-menu-end"
@@ -41,7 +43,7 @@
             <ul class="list-unstyled">
   
               <li>
-                <a class="dropdown-item" href="{% url 'usuario:editar' pk=user.pk %}">
+                <a class="dropdown-item" href="{% url 'usuario:editar' pk=user.pk %}?next={{ request.path|urlencode }}">
                   <i class="me-2 icon-xxs dropdown-item-icon fas fa-user"></i>Editar meu perfil
                 </a>
               </li>

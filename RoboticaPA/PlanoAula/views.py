@@ -14,8 +14,10 @@ from PlanoAula import forms
 
 @login_required
 def home(request):
+
     if (not request.user.first_name or not request.user.last_name):
         return redirect('usuario:completar_cadastro', pk = request.user.pk)
+
     return render(request, "Base/home.html")
 
 class Criar(generic.CreateView, LoginRequiredMixin):
