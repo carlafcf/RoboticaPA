@@ -43,6 +43,17 @@ def listar(request):
 
     return render(request, "PlanoAula/listar.html", informacoes)
 
+@login_required
+def listar_usuario(request, pk):
+    lista_aulas = PlanoAula.objects.filter(responsavel__pk=pk)
+
+    informacoes = {
+        'lista_aulas': lista_aulas
+    }
+
+    return render(request, "PlanoAula/listar.html", informacoes)
+
+
 class Editar(generic.UpdateView):
         model = PlanoAula
         form_class = forms.FormEditarPlano_aula

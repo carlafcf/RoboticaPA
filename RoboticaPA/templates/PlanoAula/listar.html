@@ -1,26 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listar</title>
-</head>
-<body>
-    <h1>Planos de aula adicionados</h1>
+{% extends "Base/base.html" %} {% block titulo %} Meus planos de aula {% endblock %} {% block conteudo %} {% if not lista_aulas %}
 
-    {% if not lista_planos_aula %}
+<h4>Não há planos aulas cadastrados.</h4>
 
-        <h4>Não há planos de aula cadastrados.</h4>
+{% else %}
 
-    {% else %}
+<ul>
+    {% for aula in lista_aulas %}
+    <li>{{aula}}</li>
+    <!--tr-->
+    {% endfor %}
+</ul>
 
-        <ul>
-            {% for plano_aula in lista_planos_aula %}
-                <li>{{plano_aula.titulo}} - {{plano_aula.descricao_atividade}}</li>
-            {% endfor %}
-        </ul>
-
-    {% endif %}
-</body>
-</html>
+{% endif %} {% endblock %}
