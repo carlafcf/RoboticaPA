@@ -1,0 +1,71 @@
+{% extends "Base/base.html" %}
+
+{% block titulo %}
+Disciplinas e Conteúdos
+{% endblock %}
+
+{% block conteudo %}
+
+<div class="container">
+    <div class="row">
+      <div class="col-8">
+        <table id="tabela_conteudos" class="table" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th class="th-sm">Conteúdo</th>
+                <th class="th-sm">Disciplina</th>
+                <th class="th-sm">#aulas</th>
+                <th class="th-sm"></th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for conteudo in lista_conteudos %}
+                    <tr>
+                        <td>{{conteudo.nome}}</td>
+                        <td>{{conteudo.disciplina}}</td>
+                        <td>-</td>
+                        <td>ícones</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+      </div>
+      <div class="col">
+            <div class="row">
+              <div class="col">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title mb-4">Criação</h4>
+                    <span class="text-uppercase fw-medium text-dark fs-5 ls-2">Disciplina</span>
+                    <!-- <p class="mt-2 mb-6">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspen disse var ius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. -->
+                    <!-- </p> -->
+                    <input type="text">
+                    <span class="text-uppercase fw-medium text-dark fs-5 ls-2">Conteúdo</span>
+                    <input type="text">
+                  </div>
+                </div>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+    $(document).ready(function () {
+        $('#tabela_conteudos').DataTable( {
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+            },
+            "columnDefs": [ {
+              "targets": 3,
+              "orderable": false
+              } ],
+            "order": [[ 1, "asc" ]]
+        } );
+      });
+</script>
+
+{% endblock %}

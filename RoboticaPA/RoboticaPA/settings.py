@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'PlanoAula',
     'Usuario',
+    'Disciplina',
     'bootstrap5', #pip install django-bootstrap-v5
     # python -m pip install Pillow
 ]
