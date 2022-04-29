@@ -42,7 +42,8 @@
             </div>
           </div>
         {% endblock %}
-        <div class="row justify-content-center">
+
+        <div class="container">
             {% block conteudo %}
 
             {% endblock %}
@@ -58,5 +59,9 @@
     {% include "Base/scripts.html" %}
 
   </body>
+
+{% block scripts %}
+
+{% endblock %}
 
 </html>
