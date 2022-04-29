@@ -1,71 +1,149 @@
 {% extends "Base/base.html" %}
 
 {% block titulo %}
-Disciplinas e Conteúdos
+Conteúdos
+{% endblock %}
+
+{% block subtitulo %}
+Disciplinas
 {% endblock %}
 
 {% block conteudo %}
 
-<div class="container">
     <div class="row">
-      <div class="col-8">
-        <table id="tabela_conteudos" class="table" cellspacing="0" width="100%">
-            <thead>
-              <tr>
-                <th class="th-sm">Conteúdo</th>
-                <th class="th-sm">Disciplina</th>
-                <th class="th-sm">#aulas</th>
-                <th class="th-sm"></th>
-              </tr>
-            </thead>
-            <tbody>
-                {% for conteudo in lista_conteudos %}
-                    <tr>
-                        <td>{{conteudo.nome}}</td>
-                        <td>{{conteudo.disciplina}}</td>
-                        <td>-</td>
-                        <td>ícones</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-          </table>
+      <div class="col-8 mb-6">
+        <!-- card  -->
+        <div class="card">
+          <!-- card header  -->
+          <div class="card-header p-4 bg-white">
+            <h4 class="mb-0">Conteúdos</h4>
+          </div>
+          <!-- card body  -->
+          <div class="card-body">
+            <table id="tabela_conteudos" class="table" cellspacing="0">
+              <thead>
+                <tr>
+                  <th class="th-sm">Disciplina</th>
+                  <th class="th-sm">Conteúdo</th>
+                  <th class="th-sm">#Aulas</th>
+                  <th class="th-sm"></th>
+                </tr>
+              </thead>
+              <tbody>
+                  {% for conteudo in lista_conteudos %}
+                      <tr>
+                          <td>{{conteudo.disciplina}}</td>
+                          <td>{{conteudo.nome}}</td>
+                          <td>-</td>
+                          <td>ícones</td>
+                      </tr>
+                  {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-      <div class="col">
-            <div class="row">
-              <div class="col">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title mb-4">Criação</h4>
-                    <span class="text-uppercase fw-medium text-dark fs-5 ls-2">Disciplina</span>
-                    <!-- <p class="mt-2 mb-6">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspen disse var ius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla, ut commodo diam libero vitae erat. -->
-                    <!-- </p> -->
-                    <input type="text">
-                    <span class="text-uppercase fw-medium text-dark fs-5 ls-2">Conteúdo</span>
-                    <input type="text">
-                  </div>
+      <div class="col-4 mb-6 g-3">
+        <!-- card  -->
+        <div class="card">
+          <!-- card header  -->
+          <div class="card-header p-4 bg-white">
+            <h4 class="mb-0">Sugestão de disciplina</h4>
+          </div>
+          <!-- card body  -->
+          <div class="card-body">
+              <div class="row g-3 align-items-center">
+                <div class="col-2">
+                  <label for="disciplina_text" class="col-form-label ">Nome:</label>
                 </div>
+                <div class="col-6">
+                  <input id="disciplina_text" class="form-control" aria-describedby="name">
+                </div>
+                <div class="col-4">
+                  <button type="submit" class="btn btn-primary" onclick="sugerir_disciplina()">Submeter</button>
+                </div>
+              </div>
+          </div>
+        </div>
 
+        <br>
+
+        <div class="card">
+          <!-- card header  -->
+          <div class="card-header p-4 bg-white">
+            <h4 class="mb-0">Sugestão de conteúdo</h4>
+          </div>
+          <!-- card body  -->
+          <div class="card-body">
+            <div class="row g-3 align-items-center">
+              <div class="col-3">
+                <label class="col-form-label ">Disciplina:</label>
+              </div>
+              <div class="col-9">
+                <select class="form-select" id="disciplina_selecionada">
+                  <option selected></option>
+                  {% for conteudo in lista_disciplinas %}
+                    <option value="{{conteudo}}">{{conteudo}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <br>
+            <div class="row g-3 align-items-center">
+              <div class="col-2">
+                <label for="conteudo_text" class="col-form-label ">Nome:</label>
+              </div>
+              <div class="col-6">
+                <input id="conteudo_text" class="form-control" aria-describedby="name">
+              </div>
+              <div class="col-4">
+                <button type="submit" class="btn btn-primary" onclick="sugerir_conteudo()">Submeter</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
 {% endblock %}
 
 {% block scripts %}
 
 <script>
-    $(document).ready(function () {
-        $('#tabela_conteudos').DataTable( {
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
-            },
-            "columnDefs": [ {
-              "targets": 3,
-              "orderable": false
-              } ],
-            "order": [[ 1, "asc" ]]
-        } );
-      });
+function sugerir_disciplina() {
+  nome = document.getElementById('disciplina_text').value;
+  $.ajax({
+      url : "sugerir_disciplina/", // the endpoint
+      type : "GET", // http method
+      data : { nome : nome }, // data sent with the get request
+  });
+  document.getElementById('disciplina_text').value = ""
+};
+
+function sugerir_conteudo() {
+  nome = document.getElementById('conteudo_text').value;
+  disciplina = document.getElementById('disciplina_selecionada').value;
+  $.ajax({
+      url : "sugerir_conteudo/", // the endpoint
+      type : "GET", // http method
+      data : { nome : nome, disciplina : disciplina }, // data sent with the get request
+  });
+  document.getElementById('conteudo_text').value = ""
+  document.getElementById('disciplina_selecionada').value = ""
+};
+
+$(document).ready(function () {
+    $('#tabela_conteudos').DataTable( {
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+        },
+        "columnDefs": [ {
+          "targets": 3,
+          "orderable": false
+          } ],
+        "order": [[ 1, "asc" ]]
+    } );
+  });
 </script>
 
 {% endblock %}
