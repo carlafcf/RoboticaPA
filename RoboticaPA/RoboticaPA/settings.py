@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'Disciplina',
     'bootstrap5', #pip install django-bootstrap-v5
     # python -m pip install Pillow
+    'widget_tweaks', # pip install django-widget-tweaks
 ]
 
 MIDDLEWARE = [
