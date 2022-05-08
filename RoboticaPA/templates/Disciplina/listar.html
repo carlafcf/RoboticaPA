@@ -101,24 +101,28 @@ Listar
 <script>
 function sugerir_disciplina() {
   nome = document.getElementById('disciplina_text').value;
-  $.ajax({
-      url : "sugerir_disciplina/", // the endpoint
-      type : "GET", // http method
-      data : { nome : nome }, // data sent with the get request
-  });
-  document.getElementById('disciplina_text').value = ""
+  if (nome != "") {
+    $.ajax({
+        url : "sugerir-disciplina/", // the endpoint
+        type : "GET", // http method
+        data : { nome : nome }, // data sent with the get request
+    });
+    document.getElementById('disciplina_text').value = ""
+  }
 };
 
 function sugerir_conteudo() {
   nome = document.getElementById('conteudo_text').value;
   disciplina = document.getElementById('disciplina_selecionada').value;
-  $.ajax({
-      url : "sugerir_conteudo/", // the endpoint
-      type : "GET", // http method
-      data : { nome : nome, disciplina : disciplina }, // data sent with the get request
-  });
-  document.getElementById('conteudo_text').value = ""
-  document.getElementById('disciplina_selecionada').value = ""
+  if (nome != "" && disciplina != "") {
+    $.ajax({
+        url : "sugerir-conteudo/", // the endpoint
+        type : "GET", // http method
+        data : { nome : nome, disciplina : disciplina }, // data sent with the get request
+    });
+    document.getElementById('conteudo_text').value = ""
+    document.getElementById('disciplina_selecionada').value = ""
+  }
 };
 
 $(document).ready(function () {

@@ -2,8 +2,14 @@ from django.db import models
 
 from Usuario.models import Usuario
 
+STATUS = [
+    ('Ativo', 'Ativo'),
+    ('Inativo', 'Inativo'),
+]
+
 class Disciplina(models.Model):
     nome = models.CharField(max_length=200, verbose_name="Nome")
+    status = models.CharField(max_length=7, choices=STATUS, default='Ativo')
     
     def __str__(self):
         return self.nome
@@ -16,6 +22,7 @@ class Disciplina(models.Model):
 class Conteudo(models.Model):
     nome = models.CharField(max_length=200, verbose_name="Nome")
     disciplina = models.ForeignKey(Disciplina, on_delete=models.RESTRICT, null=True, verbose_name="Disciplina")
+    status = models.CharField(max_length=7, choices=STATUS, default='Ativo')
     
     def __str__(self):
         return self.nome
