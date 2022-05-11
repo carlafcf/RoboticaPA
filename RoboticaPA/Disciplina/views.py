@@ -45,6 +45,26 @@ def listar_sugestoes(request, tipo):
 
     return render(request, "Disciplina/listar_sugestoes.html", informacoes)
 
+def listar_sugestoes_usuario(request, pk):
+    usuario = Usuario.objects.get(pk=pk)
+    sugestoes_disciplina_em_aberto = SugestaoDisciplina.objects.filter(status="A", usuario = usuario)
+    sugestoes_disciplina_aceita = SugestaoDisciplina.objects.filter(status="B", usuario = usuario)
+    sugestoes_disciplina_negada = SugestaoDisciplina.objects.filter(status="C", usuario = usuario)
+    sugestoes_conteudo_em_aberto = SugestaoConteudo.objects.filter(status="A", usuario = usuario)
+    sugestoes_conteudo_aceito = SugestaoConteudo.objects.filter(status="B", usuario = usuario)
+    sugestoes_conteudo_negado = SugestaoConteudo.objects.filter(status="C", usuario = usuario)
+
+    informacoes = {
+        'sugestoes_disciplina_em_aberto': sugestoes_disciplina_em_aberto,
+        'sugestoes_disciplina_aceita': sugestoes_disciplina_aceita,
+        'sugestoes_disciplina_negada': sugestoes_disciplina_negada,
+        'sugestoes_conteudo_em_aberto': sugestoes_conteudo_em_aberto,
+        'sugestoes_conteudo_aceito': sugestoes_conteudo_aceito,
+        'sugestoes_conteudo_negado': sugestoes_conteudo_negado,
+    }
+
+    return render(request, "Disciplina/listar_sugestoes_usuario.html", informacoes)
+
 @csrf_exempt
 def analisar_sugestoes_disciplina(request):
     lista_disciplinas_aceitas = request.POST.getlist('lista_disciplinas_aceitas[]')

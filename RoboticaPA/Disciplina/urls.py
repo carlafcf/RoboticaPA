@@ -14,10 +14,15 @@ urlpatterns = [
     path('sugerir-conteudo/', views.sugerir_conteudo, name="sugerir_conteudo"),
     # path('sugerir_disciplina/', views.SugerirDisciplina.as_view(), name="sugerir_disciplina"),
     # path('sugerir_conteudo/', views.SugerirConteudo.as_view(), name="sugerir_conteudo"),
+
+    # Admin
     path('listar-sugestoes/<int:tipo>', views.listar_sugestoes, name="listar_sugestoes"),
     path('analisar-disciplinas/', views.analisar_sugestoes_disciplina, name="analisar_disciplinas"),
     path('analisar-conteudos/', views.analisar_sugestoes_conteudo, name="analisar_conteudos"),
     path('definir-status-sugestao-disciplina/<int:aceitar>/<int:id>', views.definir_status_sugestao_disciplina, name="definir_status_sugestao_disciplina"),
+
+    # Usuários
+    path('listar-sugestoes-usuario/<int:pk>', views.listar_sugestoes_usuario, name="listar_sugestoes_usuario"),
     path('numero-sugestoes/', views.ler_numero_sugestoes, name="numero_sugestoes"),
 
 

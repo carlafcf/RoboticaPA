@@ -16,6 +16,5 @@ function alerta_sugestoes() {
 };
 
 window.onload = function() {
-    alert("load")
     alerta_sugestoes();
 };
