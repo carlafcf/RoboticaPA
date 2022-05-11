@@ -14,6 +14,7 @@ Listar sugestões
 {% endblock %}
 
 {% block conteudo %}
+
 <div class="p-3 text-center">
   <button id="btn_disciplina" class="btn btn-success" onclick="mostrar_disciplinas()">Disciplinas</button>
   <button id="btn_conteudo" class="btn btn-primary" onclick="mostrar_conteudos()">Conteúdos</button>
@@ -175,6 +176,14 @@ Listar sugestões
 <script src="{% static 'assets/js/custom/sugestao_disciplina.js' %}"></script>
 
 <script>
+
+window.onload = function() {
+    if ( {{tipo}}  == 1) {
+        mostrar_conteudos();
+    }
+    alerta_sugestoes();
+  };
+
 $(document).ready(function () {
     $('#tabela_disciplinas').DataTable( {
         "language": {
@@ -184,8 +193,7 @@ $(document).ready(function () {
     $('#tabela_conteudos').DataTable( {
         "language": {
             "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
-        },
-        "order": [[ 1, "asc" ]]
+        }
     } );
     $('#tabela_sugestao_disciplina').DataTable( {
         "language": {
@@ -194,8 +202,7 @@ $(document).ready(function () {
         "columnDefs": [ {
           "targets": 2,
           "orderable": false
-          } ],
-        "order": [[ 1, "asc" ]]
+          } ]
     } );
     $('#tabela_sugestao_conteudo').DataTable( {
         "language": {
@@ -204,8 +211,7 @@ $(document).ready(function () {
         "columnDefs": [ {
           "targets": 3,
           "orderable": false
-          } ],
-        "order": [[ 1, "asc" ]]
+          } ]
     } );
   });
 </script>

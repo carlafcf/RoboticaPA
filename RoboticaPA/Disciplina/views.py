@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 import json
+from django.http import JsonResponse
 
 from django.views import generic
 from django.urls import reverse_lazy
@@ -18,8 +19,8 @@ from Usuario.models import Usuario
 
 
 def listar(request):
-    disciplinas = Disciplina.objects.all()
-    conteudos = Conteudo.objects.all()
+    disciplinas = Disciplina.objects.filter(status="Ativo")
+    conteudos = Conteudo.objects.filter(status="Ativo")
 
     informacoes = {
         'lista_disciplinas': disciplinas,
@@ -28,33 +29,37 @@ def listar(request):
 
     return render(request, "Disciplina/listar.html", informacoes)
 
-def listar_sugestoes(request):
+def listar_sugestoes(request, tipo):
     sugestoes_disciplina = SugestaoDisciplina.objects.filter(status="A")
     sugestoes_conteudo = SugestaoConteudo.objects.filter(status="A")
-    disciplinas = Disciplina.objects.all()
-    conteudos = Conteudo.objects.all()
+    disciplinas = Disciplina.objects.filter(status="Ativo")
+    conteudos = Conteudo.objects.filter(status="Ativo")
 
     informacoes = {
         'sugestoes_disciplina': sugestoes_disciplina,
         'sugestoes_conteudo': sugestoes_conteudo,
         'lista_disciplinas': disciplinas,
         'lista_conteudos': conteudos,
+        'tipo': tipo,
     }
 
     return render(request, "Disciplina/listar_sugestoes.html", informacoes)
 
 @csrf_exempt
 def analisar_sugestoes_disciplina(request):
-    print("aqui!!")
     lista_disciplinas_aceitas = request.POST.getlist('lista_disciplinas_aceitas[]')
     lista_disciplinas_negadas = request.POST.getlist('lista_disciplinas_negadas[]')
 
     for pk in lista_disciplinas_aceitas:
         sugestao = SugestaoDisciplina.objects.get(id=int(pk))
-        nova_disciplina = Disciplina(nome = sugestao.nome)
-        nova_disciplina.save()
-        sugestao.status = 'B'
-        sugestao.save()
+        if (len(Disciplina.objects.filter(nome = sugestao.nome)) == 0) : 
+            nova_disciplina = Disciplina(nome = sugestao.nome)
+            nova_disciplina.save()
+            sugestao.status = 'B'
+            sugestao.save()
+        else:
+            sugestao.status = 'C'
+            sugestao.save()
     
     for pk in lista_disciplinas_negadas:
         sugestao = SugestaoDisciplina.objects.get(id=int(pk))
@@ -70,10 +75,14 @@ def analisar_sugestoes_conteudo(request):
 
     for pk in lista_conteudos_aceitos:
         sugestao = SugestaoConteudo.objects.get(id=int(pk))
-        novo_conteudo = Conteudo(nome = sugestao.nome, disciplina = sugestao.disciplina)
-        novo_conteudo.save()
-        sugestao.status = 'B'
-        sugestao.save()
+        if (len(Conteudo.objects.filter(nome = sugestao.nome, disciplina = sugestao.disciplina)) == 0): 
+            novo_conteudo = Conteudo(nome = sugestao.nome, disciplina = sugestao.disciplina)
+            novo_conteudo.save()
+            sugestao.status = 'B'
+            sugestao.save()
+        else:
+            sugestao.status = 'C'
+            sugestao.save()
     
     for pk in lista_conteudos_negados:
         sugestao = SugestaoConteudo.objects.get(id=int(pk))
@@ -114,6 +123,14 @@ def definir_status_sugestao_disciplina(request, aceitar, id):
         sugestao_disciplina.save()
 
     return redirect('disciplina:listar_sugestoes')
+
+def ler_numero_sugestoes(request):
+    qnt_sugestoes_disciplina = len(SugestaoDisciplina.objects.filter(status = 'A'))
+    qnt_sugestoes_conteudo = len(SugestaoConteudo.objects.filter(status = 'A'))
+
+    resposta = qnt_sugestoes_disciplina + qnt_sugestoes_conteudo
+    return JsonResponse({"qnt":resposta}, status = 200)
+
 
 def finalizar_requisicao_api():
     response_data = 'successful!'

@@ -52,12 +52,12 @@ $("#form_disciplina").submit(function (e) {
     e.preventDefault();
 
     $.ajax({
-        url : "analisar-disciplinas/",
+        url : "/disciplina/analisar-disciplinas/",
         method : "POST",
         data : { lista_disciplinas_aceitas : lista_disciplinas_aceitas,
             lista_disciplinas_negadas : lista_disciplinas_negadas },
         success: function (returndata) {
-            window.location.href = '/disciplina/listar-sugestoes/'; 
+            window.location.href = '/disciplina/listar-sugestoes/0'; 
         }
     });
 });
@@ -67,12 +67,12 @@ $("#form_conteudo").submit(function (e) {
     e.preventDefault();
 
     $.ajax({
-        url : "analisar-conteudos/",
+        url : "/disciplina/analisar-conteudos/",
         method : "POST",
         data : { lista_conteudos_aceitos : lista_conteudos_aceitos,
             lista_conteudos_negados : lista_conteudos_negados },
         success: function (returndata) {
-            window.location.href = '/disciplina/listar-sugestoes/'; 
+            window.location.href = '/disciplina/listar-sugestoes/1'; 
         }
     });
 });
