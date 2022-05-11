@@ -20,10 +20,10 @@ function mostrar_negados() {
 }
 
 function trocar_cor(nova, antiga1, antiga2) {
-    document.getElementById(nova).classList.remove('btn-primary');
+    document.getElementById(nova).classList.remove('btn-light');
     document.getElementById(nova).classList.add('btn-success');
     document.getElementById(antiga1).classList.remove('btn-success');
-    document.getElementById(antiga1).classList.add('btn-primary');
+    document.getElementById(antiga1).classList.add('btn-light');
     document.getElementById(antiga2).classList.remove('btn-success');
-    document.getElementById(antiga2).classList.add('btn-primary');
+    document.getElementById(antiga2).classList.add('btn-light');
 }

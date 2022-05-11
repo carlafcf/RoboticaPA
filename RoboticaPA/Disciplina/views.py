@@ -111,17 +111,19 @@ def analisar_sugestoes_conteudo(request):
 
     return redirect(reverse_lazy('disciplina:listar_sugestoes'))
 
+@csrf_exempt
 def sugerir_disciplina(request):
-    nome = request.GET.get('nome')
+    nome = request.POST.get('nome')
     usuario = Usuario.objects.get(username=request.user.username)
     sugestao_disciplina = SugestaoDisciplina(nome = nome, usuario = usuario)
     sugestao_disciplina.save()
     
     return finalizar_requisicao_api()
 
+@csrf_exempt
 def sugerir_conteudo(request):
-    nome = request.GET.get('nome')
-    nome_disciplina = request.GET.get('disciplina')
+    nome = request.POST.get('nome')
+    nome_disciplina = request.POST.get('disciplina')
     usuario = Usuario.objects.get(username=request.user.username)
     disciplina = Disciplina.objects.get(nome = nome_disciplina)
     sugestao_conteudo = SugestaoConteudo(nome = nome, usuario = usuario, disciplina = disciplina)

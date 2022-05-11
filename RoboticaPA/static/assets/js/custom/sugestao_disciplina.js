@@ -90,10 +90,10 @@ function mostrar_conteudos() {
 }
 
 function trocar_cor(nova, antiga) {
-    document.getElementById(nova).classList.remove('btn-primary');
+    document.getElementById(nova).classList.remove('btn-light');
     document.getElementById(nova).classList.add('btn-success');
     document.getElementById(antiga).classList.remove('btn-success');
-    document.getElementById(antiga).classList.add('btn-primary');
+    document.getElementById(antiga).classList.add('btn-light');
 }
 
 // function finalizar_sugestoes_disciplina() {

@@ -11,10 +11,10 @@ function mostrar_conteudos() {
 }
 
 function trocar_cor(nova, antiga) {
-    document.getElementById(nova).classList.remove('btn-primary');
+    document.getElementById(nova).classList.remove('btn-light');
     document.getElementById(nova).classList.add('btn-success');
     document.getElementById(antiga).classList.remove('btn-success');
-    document.getElementById(antiga).classList.add('btn-primary');
+    document.getElementById(antiga).classList.add('btn-light');
 }
 
 function sugerir_disciplina() {
@@ -22,7 +22,7 @@ function sugerir_disciplina() {
   if (nome != "") {
     $.ajax({
         url : "/disciplina/sugerir-disciplina/", // the endpoint
-        type : "GET", // http method
+        type : "POST", // http method
         data : { nome : nome }, // data sent with the get request
     });
     document.getElementById('disciplina_text').value = ""
@@ -35,8 +35,9 @@ function sugerir_conteudo() {
     if (nome != "" && disciplina != "") {
         $.ajax({
             url : "/disciplina/sugerir-conteudo/", // the endpoint
-            type : "GET", // http method
-            data : { nome : nome, disciplina : disciplina }, // data sent with the get request
+            type : "POST", // http method
+            data : { nome : nome, 
+                    disciplina : disciplina }, // data sent with the post request
         });
         document.getElementById('conteudo_text').value = ""
         document.getElementById('disciplina_selecionada').value = ""
