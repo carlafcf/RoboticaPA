@@ -86,7 +86,7 @@ def analisar_sugestoes_disciplina(request):
         sugestao.status = 'C'
         sugestao.save()
 
-    return redirect('disciplina:listar_sugestoes')
+    return redirect('disciplina:listar_sugestoes', tipo=0)
 
 @csrf_exempt
 def analisar_sugestoes_conteudo(request):
@@ -109,7 +109,7 @@ def analisar_sugestoes_conteudo(request):
         sugestao.status = 'C'
         sugestao.save()
 
-    return redirect(reverse_lazy('disciplina:listar_sugestoes'))
+    return redirect('disciplina:listar_sugestoes', tipo=1)
 
 @csrf_exempt
 def sugerir_disciplina(request):
