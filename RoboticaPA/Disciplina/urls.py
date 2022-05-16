@@ -26,6 +26,8 @@ urlpatterns = [
     path('listar-sugestoes-usuario/<int:pk>', views.listar_sugestoes_usuario, name="listar_sugestoes_usuario"),
     path('numero-sugestoes/', views.ler_numero_sugestoes, name="numero_sugestoes"),
 
+    path('ler-id-conteudo/', views.ler_id_conteudo, name="ler_id_conteudo"),
+
 
     # path('deletar/<int:pk>', views.Deletar.as_view(), name="deletar"),
 ]

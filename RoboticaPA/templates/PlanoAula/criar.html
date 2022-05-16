@@ -39,6 +39,15 @@ Novo plano de aula
     </div>
     <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
         <div class="card container">
+            <div>
+                <div class="card-header pb-0 p-3">
+                    <div class="d-flex justify-content-between">
+                    <h6 class="mb-2">Conteúdos selecionados</h6>
+                    </div>
+                </div>
+                <div id="div_conteudos_selecionados" class="row">
+                </div>
+            </div>
             <div id="div_disciplinas">
                 <div class="card-header pb-0 p-3">
                     <div class="d-flex justify-content-between">
@@ -205,11 +214,14 @@ Novo plano de aula
 {% block scripts %}
 
 <script>
+    var conteudos_selecionados = []
+
     function selecionar_conteudo(nome) {
         document.getElementById("div_disciplinas").style.display = 'none';
         document.getElementById("div_conteudos").style.display = 'block';
-        document.getElementById("disciplina_selecionada").innerHTML = "<a onclick='escolher_outro_conteudo()'>" +
-                    "<i class='fa fa-arrow-left font-weight-bolder text-primary'></i>" +
+        document.getElementById("disciplina_selecionada").innerHTML = "" +
+                    "<a onclick='escolher_outro_conteudo()'>" +
+                    "   <i class='fa fa-arrow-left font-weight-bolder text-primary'></i>" +
                     "</a>" + 
                     " Disciplina: " + nome;
 
@@ -223,10 +235,10 @@ Novo plano de aula
                 for (var i = 0; i < response.length; i++) {
                     nova_linha = tabela.insertRow(-1);
                     nova_celula = nova_linha.insertCell(0);
-                    nova_celula.innerHTML = response[i][1]
-                    // <a onclick="sugerir_disciplina()">
-                    //     <i class="fa fa-check h2 font-weight-bolder text-primary"></i>
-                    // </a>
+                    nova_celula.innerHTML = response[i][1] + 
+                                    " <a onclick=\"adicionar_conteudo('" + nome + "','" + response[i][1] + "')\" style='float:right'>" +
+                                    "    <i class='fas fa-plus font-weight-bolder text-primary'></i> " +
+                                    " </a>"
                 }
             }
         });
@@ -236,6 +248,39 @@ Novo plano de aula
         document.getElementById("div_disciplinas").style.display = 'block';
         document.getElementById("div_conteudos").style.display = 'none';
         $("#tabela_conteudos").find("tr:not(:first)").remove();
+    }
+
+    function adicionar_conteudo(disciplina, conteudo) {
+
+        $.ajax({
+            url : "/disciplina/ler-id-conteudo/", // the endpoint
+            type : "GET", // http method
+            data : {'conteudo': conteudo,
+                    'disciplina': disciplina},
+            success: function (response) {
+                if (!conteudos_selecionados.includes(response['id'])) {
+                    conteudos_selecionados.push(response['id'])
+                    // const para = document.createElement("p");
+                    // const node = document.createTextNode(disciplina + ": " + conteudo);
+                    // para.appendChild(node);
+
+                    var str = "<a onclick='remover_conteudo(" + response['id'] + ")' id='conteudo_selecionado_" + response['id'] + 
+                        "'> " +
+                        " <i class='fas fa-trash font-weight-bolder text-danger'></i> " +
+                        disciplina + ": " + conteudo +
+                        " </a>";
+                    document.getElementById("div_conteudos_selecionados").innerHTML += str ;
+                }
+            }
+        });
+    }
+
+    function remover_conteudo(id) {
+        const index = conteudos_selecionados.indexOf(id);
+        conteudos_selecionados.splice(index, 1);
+        var elem = document.getElementById("conteudo_selecionado_"+id);
+        elem.parentNode.removeChild(elem);
+        console.log(conteudos_selecionados)
     }
 </script>
 

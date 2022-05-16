@@ -160,6 +160,16 @@ def ler_numero_sugestoes(request):
     resposta = qnt_sugestoes_disciplina + qnt_sugestoes_conteudo
     return JsonResponse({"qnt":resposta}, status = 200)
 
+def ler_id_conteudo(request):
+    nome_disciplina = request.GET.get('disciplina')
+    nome_conteudo = request.GET.get('conteudo')
+    
+    disciplina = Disciplina.objects.get(nome=nome_disciplina)
+    conteudo = Conteudo.objects.get(nome=nome_conteudo, disciplina=disciplina)
+
+    id_conteudo = conteudo.id
+    return JsonResponse({"id":id_conteudo}, status = 200)
+
 
 def finalizar_requisicao_api(response_data):
     response_data = response_data
