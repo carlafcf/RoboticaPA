@@ -15,6 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from PlanoAula import views as plano_aula_views
 
@@ -23,4 +26,8 @@ urlpatterns = [
     path('', plano_aula_views.home, name='home'),
     path('plano_aula/', include('PlanoAula.urls')),
     path('usuario/', include('Usuario.urls')),
+    path('disciplina/', include('Disciplina.urls')),
 ]
+
+urlpatterns += staticfiles_urlpatterns()
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

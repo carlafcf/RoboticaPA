@@ -1,18 +1,242 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar</title>
-</head>
-<body>
-    <h1>Criar Planos de aula</h1>
+{% extends "Base/base.html" %}
+{% load static %}
+{% load bootstrap5 %}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Cadastrar">
-    </form>
-</body>
-</html>
+{% block breadcrumb1 %}
+Plano de aula
+{% endblock %}
+
+{% block breadcrumb2 %}
+Criação
+{% endblock %}
+
+{% block titulo %}
+Novo plano de aula
+{% endblock %}
+
+{% block conteudo %}
+
+<div class="p-3 text-center">
+  <button id="btn_inf_gerais" class="btn btn-success" onclick="mostrar_em_aberto()">Informações gerais</button>
+  <button id="btn_aceitos" class="btn btn-light" onclick="mostrar_aceitos()">Aceitos</button>
+  <button id="btn_negados" class="btn btn-light" onclick="mostrar_negados()">Negados</button>
+</div>
+
+<!-- <form method="POST">
+    {% csrf_token %} -->
+
+<div id="div_inf_gerais">
+  <div class="row mt-4">
+    <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
+        <div class="card container">
+            <div class="card-header pb-0 p-3">
+                <div class="d-flex justify-content-between">
+                <h6 class="mb-2">Plano de aula</h6>
+                </div>
+            </div>
+            {% bootstrap_form form_inf_gerais %}
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
+        <div class="card container">
+            <div id="div_disciplinas">
+                <div class="card-header pb-0 p-3">
+                    <div class="d-flex justify-content-between">
+                    <h6 class="mb-2">Disciplinas</h6>
+                    </div>
+                </div>
+                <div class="row">
+                    {% for disciplina in lista_disciplinas %}
+                        <button class="btn btn-primary col-lg-4 col-md-4" 
+                                onclick="selecionar_conteudo('{{disciplina.nome}}')">
+                                {{ disciplina.nome }}
+                        </button>
+                    {% endfor %}
+                </div>
+            </div>
+            <div id="div_conteudos" style="display: none">
+                <div class="card-header pb-0 p-3">
+                    <div class="d-flex justify-content-between">
+                    <h6 class="mb-2">Conteúdos</h6>
+                    <p id="disciplina_selecionada"></p>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="tabela_conteudos" class="table align-items-center" cellspacing="0">
+                    <thead>
+                        <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Conteúdo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                    </table>
+                </div>
+                <!-- <div class="row">
+                    {% for conteudo in lista_conteudos %}
+                        {% if conteudo.nome == "" %}
+                            <button class="btn btn-primary col-lg-4 col-md-4">{{ conteudo.nome }}</button>
+                        {% endif %}
+                    {% endfor %}
+                </div> -->
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<div id="div_aceitos" style="display: none">
+    <div class="row mt-4">
+        <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
+            <div class="card container">
+                <div class="card-header pb-0 p-3">
+                <div class="d-flex justify-content-between">
+                    <h6 class="mb-2">Disciplinas</h6>
+                </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="tabela_s_disciplinas_aceitas" class="table align-items-center" cellspacing="0">
+                    <thead>
+                        <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for disciplina in sugestoes_disciplina_aceita %}
+                            <tr>
+                                <td><p class="text-sm mb-0">{{disciplina.nome}}</p></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
+            <div class="card container">
+                <div class="card-header pb-0 p-3">
+                <div class="d-flex justify-content-between">
+                    <h6 class="mb-2">Conteúdos</h6>
+                </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="tabela_s_conteudos_aceitos" class="table align-items-center" cellspacing="0">
+                    <thead>
+                        <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Conteúdo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for conteudo in sugestoes_conteudo_aceito %}
+                            <tr>
+                                <td><p class="text-sm mb-0">{{conteudo.disciplina}}</p></td>
+                                <td><p class="text-sm mb-0">{{conteudo.nome}}</p></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+  </div>
+</div>
+
+<div id="div_negados" style="display: none">
+    <div class="row mt-4">
+        <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
+            <div class="card container">
+                <div class="card-header pb-0 p-3">
+                <div class="d-flex justify-content-between">
+                    <h6 class="mb-2">Disciplinas</h6>
+                </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="tabela_s_disciplinas_negadas" class="table align-items-center" cellspacing="0">
+                    <thead>
+                        <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for disciplina in sugestoes_disciplina_negada %}
+                            <tr>
+                                <td><p class="text-sm mb-0">{{disciplina.nome}}</p></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
+            <div class="card container">
+                <div class="card-header pb-0 p-3">
+                <div class="d-flex justify-content-between">
+                    <h6 class="mb-2">Conteúdos</h6>
+                </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="tabela_s_conteudos_negados" class="table align-items-center" cellspacing="0">
+                    <thead>
+                        <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Conteúdo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for conteudo in sugestoes_conteudo_negado %}
+                            <tr>
+                                <td><p class="text-sm mb-0">{{conteudo.disciplina}}</p></td>
+                                <td><p class="text-sm mb-0">{{conteudo.nome}}</p></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+  </div>
+</div>
+
+<!-- </form> -->
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+    function selecionar_conteudo(nome) {
+        document.getElementById("div_disciplinas").style.display = 'none';
+        document.getElementById("div_conteudos").style.display = 'block';
+        document.getElementById("disciplina_selecionada").innerHTML = "<a onclick='escolher_outro_conteudo()'>" +
+                    "<i class='fa fa-arrow-left font-weight-bolder text-primary'></i>" +
+                    "</a>" + 
+                    " Disciplina: " + nome;
+
+        tabela = document.getElementById('tabela_conteudos');
+
+        $.ajax({
+            url : "/disciplina/listar-conteudos/", // the endpoint
+            type : "GET", // http method
+            data : {'nome': nome},
+            success: function (response) {
+                for (var i = 0; i < response.length; i++) {
+                    nova_linha = tabela.insertRow(-1);
+                    nova_celula = nova_linha.insertCell(0);
+                    nova_celula.innerHTML = response[i][1]
+                    // <a onclick="sugerir_disciplina()">
+                    //     <i class="fa fa-check h2 font-weight-bolder text-primary"></i>
+                    // </a>
+                }
+            }
+        });
+    }
+
+    function escolher_outro_conteudo() {
+        document.getElementById("div_disciplinas").style.display = 'block';
+        document.getElementById("div_conteudos").style.display = 'none';
+        $("#tabela_conteudos").find("tr:not(:first)").remove();
+    }
+</script>
+
+{% endblock %}

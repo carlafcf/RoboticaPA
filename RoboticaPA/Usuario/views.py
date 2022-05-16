@@ -61,7 +61,28 @@ class Editar(LoginRequiredMixin, generic.UpdateView):
     model = Usuario
     form_class = forms.FormEditarUsuario
     template_name = 'Usuario/editar.html'
-    success_url = reverse_lazy('usuario:listar_ativos')
+
+    def get_success_url(self):
+           pk = self.kwargs["pk"]
+           return reverse_lazy("usuario:editar", kwargs={"pk": pk})
+
+def alterar_avatar(request, pk, novo):
+    if (novo == 0):
+        usuario = Usuario.objects.get(pk=pk)
+        usuario.avatar = 'profile-pic/default.jpeg'
+        usuario.save()
+        return redirect('usuario:editar', pk=pk)
+    else:
+        pass
+
+class AlterarSenha(LoginRequiredMixin, generic.UpdateView):
+    model = Usuario
+    form_class = forms.FormEditarSenha
+    template_name = 'Usuario/alterar_senha.html'
+
+    def get_success_url(self):
+           pk = self.kwargs["pk"]
+           return reverse_lazy("usuario:editar", kwargs={"pk": pk})
 
 class Detalhes(LoginRequiredMixin, generic.DetailView):
     model = Usuario

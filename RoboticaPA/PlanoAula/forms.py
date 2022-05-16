@@ -4,6 +4,12 @@ from django.forms import ModelForm
 
 from PlanoAula.models import PlanoAula
 
+class FormCriarPlano_aula(ModelForm):
+
+    class Meta:
+        model = PlanoAula
+        fields = ('titulo', 'contextualizacao', 'descricao_atividade')
+
 
 class FormEditarPlano_aula(ModelForm):
     titulo = forms.CharField(max_length=200, label='Titulo', widget=forms.Textarea)

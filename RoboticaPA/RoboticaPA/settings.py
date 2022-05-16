@@ -17,6 +17,10 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+print(MEDIA_ROOT)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -41,7 +45,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'PlanoAula',
     'Usuario',
+    'Disciplina',
     'bootstrap5', #pip install django-bootstrap-v5
+    # python -m pip install Pillow
+    'widget_tweaks', # pip install django-widget-tweaks
 ]
 
 MIDDLEWARE = [
@@ -136,8 +143,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'usuario:login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'usuario:login'
-
-LOGIN_REDIRECT_URL = 'plano_aula:listar'
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = 'smtp.gmail.com'
