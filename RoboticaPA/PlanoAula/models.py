@@ -10,7 +10,6 @@ class PlanoAula(models.Model):
     descricao_atividade = models.TextField(verbose_name="Descrição da atividade")
     responsavel = models.ForeignKey(Usuario, on_delete=models.RESTRICT,null=True, verbose_name="Responsável")
     data_criacao = models.DateTimeField(default=timezone.now, verbose_name="Data de criação")
-    data_criacao =data_criacao.strftime('%d/%m/%Y')
     conteudos = models.ManyToManyField(Conteudo, verbose_name="Conteúdos")
     # robo_tipo = 
     # robo_descricao = 

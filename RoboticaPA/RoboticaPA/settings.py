@@ -145,8 +145,8 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'usuario:login'
 
 REST_FRAMEWORK = {
-    'DATE_FORMAT': "%d/%m/%Y",
-
+    'DATE_FORMAT': ["%d/%m/%Y"],
+    'DATE_INPUT_FORMATS': ["%d-%m-%Y"],
 }
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
