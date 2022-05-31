@@ -1,14 +1,72 @@
-{% extends "Base/base.html" %} {% block titulo %} Meus planos de aula {% endblock %} {% block conteudo %} {% if not lista_aulas %}
+{% extends "Base/base.html" %} {% load static %} {% block breadcrumb1 %} Plano de Aula {% endblock %} {% block titulo %} Listar {% endblock %} {% block conteudo %}
 
-<h4>Não há planos aulas cadastrados.</h4>
+<div class="p-3 text-center">
+    <button id="btn_planoAula" class="btn btn-success" onclick="mostrar_plano_aula()">Plano de Aula</button>
+</div>
 
-{% else %}
+<div class="col-lg-8 col-md-12 mb-lg-0 mb-4">
+    <div class="card container">
+        <div class="card-header pb-0 p-3">
+            <div class="d-flex justify-content-between">
+                <h6 class="mb-2">Planos de Aula</h6>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table id="tabela_conteudos" class="table align-items-center" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Titulo</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Descrição</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Data</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for plano_aula in lista_planos_aula %}
+                    <tr>
+                        <td>
+                            <h6 class="mb-0 text-sm">{{plano_aula.titulo}}</h6>
+                        </td>
+                        <td>
+                            <p class="text-sm mb-0">{{plano_aula.descricao_atividade}}</p>
+                        </td>
+                        <td>
+                            <p class="text-xs font-weight-bold mb-0">{{plano_aula.data_criacao}}</p>
+                        </td>
+                        <td><span class="text-secondary text-xs font-weight-bold">ícones</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block scripts %}
 
-<ul>
-    {% for aula in lista_aulas %}
-    <li>{{aula}}</li>
-    <!--tr-->
-    {% endfor %}
-</ul>
+<script src="{% static 'assets/js/custom/listar_disciplinas.js' %}"></script>
 
-{% endif %} {% endblock %}
+<script>
+    $(document).ready(function() {
+        $('#tabela_disciplinas').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+            },
+            "columnDefs": [{
+                "targets": 2,
+                "orderable": false
+            }]
+        });
+        $('#tabela_conteudos').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+            },
+            "columnDefs": [{
+                "targets": 3,
+                "orderable": false
+            }]
+        });
+    });
+</script>
+
+{% endblock %}

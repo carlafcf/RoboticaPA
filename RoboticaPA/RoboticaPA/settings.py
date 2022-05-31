@@ -144,6 +144,11 @@ LOGIN_URL = 'usuario:login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'usuario:login'
 
+REST_FRAMEWORK = {
+    'DATE_FORMAT': "%d/%m/%Y",
+
+}
+
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_PORT = 587

@@ -50,6 +50,7 @@ def criar(request):
 
         return render(request, "PlanoAula/criar.html", informacoes)
 
+
 @login_required
 def listar(request):
     planos_aula = PlanoAula.objects.all()
