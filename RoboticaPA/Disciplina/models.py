@@ -21,7 +21,7 @@ class Disciplina(models.Model):
 
 class Conteudo(models.Model):
     nome = models.CharField(max_length=200, verbose_name="Nome")
-    disciplina = models.ForeignKey(Disciplina, on_delete=models.RESTRICT, null=True, verbose_name="Disciplina")
+    disciplina = models.ForeignKey(Disciplina, on_delete=models.RESTRICT, related_name="conteudos", verbose_name="Disciplina")
     status = models.CharField(max_length=7, choices=STATUS, default='Ativo')
     
     def __str__(self):

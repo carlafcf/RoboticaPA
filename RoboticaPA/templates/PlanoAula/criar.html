@@ -17,21 +17,28 @@ Novo plano de aula
 {% block conteudo %}
 
 <div class="p-3 text-center">
-  <button id="btn_inf_gerais" class="btn btn-success" onclick="mostrar_em_aberto()">Informações gerais</button>
-  <button id="btn_aceitos" class="btn btn-light" onclick="mostrar_aceitos()">Aceitos</button>
-  <button id="btn_negados" class="btn btn-light" onclick="mostrar_negados()">Negados</button>
+  <button id="btn_inf_gerais" class="btn btn-success" onclick="mostrar_inf_gerais()">Informações gerais</button>
+  <button id="btn_montagem_programacao" class="btn btn-light" onclick="mostrar_montagem_programacao()">Montagem e Programação</button>
+  <button id="btn_midias" class="btn btn-light" onclick="mostrar_execucao()">Mídias</button>
 </div>
 
-<!-- <form method="POST">
-    {% csrf_token %} -->
+<form method="POST">
+    {% csrf_token %}
 
+    <input type="hidden" id="lista_id_conteudos" name="lista_id_conteudos"></input>
+
+<div class="row float-right">
+    <input class="btn btn-info col-lg-2" type="submit" value="Cadastrar" />
+</div>
+
+<div>
 <div id="div_inf_gerais">
   <div class="row mt-4">
     <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
         <div class="card container">
             <div class="card-header pb-0 p-3">
                 <div class="d-flex justify-content-between">
-                <h6 class="mb-2">Plano de aula</h6>
+                <h6 class="text-uppercase text-sm">Plano de aula</h6>
                 </div>
             </div>
             {% bootstrap_form form_inf_gerais %}
@@ -42,31 +49,36 @@ Novo plano de aula
             <div>
                 <div class="card-header pb-0 p-3">
                     <div class="d-flex justify-content-between">
-                    <h6 class="mb-2">Conteúdos selecionados</h6>
+                    <h6 class="text-uppercase text-sm">Conteúdos selecionados</h6>
                     </div>
                 </div>
                 <div id="div_conteudos_selecionados" class="row">
                 </div>
             </div>
+            <hr class="horizontal dark">
             <div id="div_disciplinas">
                 <div class="card-header pb-0 p-3">
                     <div class="d-flex justify-content-between">
-                    <h6 class="mb-2">Disciplinas</h6>
+                    <p class="text-uppercase text-sm">Disciplinas</p>
                     </div>
                 </div>
                 <div class="row">
                     {% for disciplina in lista_disciplinas %}
-                        <button class="btn btn-primary col-lg-4 col-md-4" 
-                                onclick="selecionar_conteudo('{{disciplina.nome}}')">
+                        {% if disciplina.conteudos.all|length > 0 %}
+                            <div class="col-lg-4 col-md-4">
+                                <a onclick="selecionar_conteudo('{{disciplina.nome}}')">
+                                    <i class="text-primary me-2 icon-xxs dropdown-item-icon fas fa-arrow-right"></i>
+                                </a>
                                 {{ disciplina.nome }}
-                        </button>
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
             <div id="div_conteudos" style="display: none">
                 <div class="card-header pb-0 p-3">
                     <div class="d-flex justify-content-between">
-                    <h6 class="mb-2">Conteúdos</h6>
+                    <p class="text-uppercase text-sm">Conteúdos</p>
                     <p id="disciplina_selecionada"></p>
                     </div>
                 </div>
@@ -94,121 +106,58 @@ Novo plano de aula
   </div>
 </div>
 
-<div id="div_aceitos" style="display: none">
+<div id="div_montagem_programacao" style="display: none">
     <div class="row mt-4">
         <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
             <div class="card container">
                 <div class="card-header pb-0 p-3">
-                <div class="d-flex justify-content-between">
-                    <h6 class="mb-2">Disciplinas</h6>
+                    <div class="d-flex justify-content-between">
+                    <h6 class="text-uppercase text-sm">Montagem</h6>
+                    </div>
                 </div>
-                </div>
-                <div class="table-responsive">
-                    <table id="tabela_s_disciplinas_aceitas" class="table align-items-center" cellspacing="0">
-                    <thead>
-                        <tr>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for disciplina in sugestoes_disciplina_aceita %}
-                            <tr>
-                                <td><p class="text-sm mb-0">{{disciplina.nome}}</p></td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                    </table>
-                </div>
+                {% bootstrap_form form_montagem %}
             </div>
         </div>
         <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
             <div class="card container">
                 <div class="card-header pb-0 p-3">
-                <div class="d-flex justify-content-between">
-                    <h6 class="mb-2">Conteúdos</h6>
+                    <div class="d-flex justify-content-between">
+                    <h6 class="text-uppercase text-sm">Programação</h6>
+                    </div>
                 </div>
+                {% bootstrap_form form_programacao %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="div_midias" style="display: none">
+    <div class="row mt-4">
+        <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
+            <div class="card container">
+                <div class="card-header pb-0 p-3">
+                    <div class="d-flex justify-content-between">
+                    <h6 class="text-uppercase text-sm">Robô</h6>
+                    </div>
                 </div>
-                <div class="table-responsive">
-                    <table id="tabela_s_conteudos_aceitos" class="table align-items-center" cellspacing="0">
-                    <thead>
-                        <tr>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Conteúdo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for conteudo in sugestoes_conteudo_aceito %}
-                            <tr>
-                                <td><p class="text-sm mb-0">{{conteudo.disciplina}}</p></td>
-                                <td><p class="text-sm mb-0">{{conteudo.nome}}</p></td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                    </table>
+                <!-- {% bootstrap_form form_montagem %} -->
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
+            <div class="card container">
+                <div class="card-header pb-0 p-3">
+                    <div class="d-flex justify-content-between">
+                    <h6 class="text-uppercase text-sm">Execução</h6>
+                    </div>
                 </div>
+                <!-- {% bootstrap_form form_programacao %} -->
             </div>
         </div>
   </div>
 </div>
 
-<div id="div_negados" style="display: none">
-    <div class="row mt-4">
-        <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
-            <div class="card container">
-                <div class="card-header pb-0 p-3">
-                <div class="d-flex justify-content-between">
-                    <h6 class="mb-2">Disciplinas</h6>
-                </div>
-                </div>
-                <div class="table-responsive">
-                    <table id="tabela_s_disciplinas_negadas" class="table align-items-center" cellspacing="0">
-                    <thead>
-                        <tr>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for disciplina in sugestoes_disciplina_negada %}
-                            <tr>
-                                <td><p class="text-sm mb-0">{{disciplina.nome}}</p></td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
-            <div class="card container">
-                <div class="card-header pb-0 p-3">
-                <div class="d-flex justify-content-between">
-                    <h6 class="mb-2">Conteúdos</h6>
-                </div>
-                </div>
-                <div class="table-responsive">
-                    <table id="tabela_s_conteudos_negados" class="table align-items-center" cellspacing="0">
-                    <thead>
-                        <tr>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Conteúdo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for conteudo in sugestoes_conteudo_negado %}
-                            <tr>
-                                <td><p class="text-sm mb-0">{{conteudo.disciplina}}</p></td>
-                                <td><p class="text-sm mb-0">{{conteudo.nome}}</p></td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-  </div>
 </div>
-
-<!-- </form> -->
+</form>
 {% endblock %}
 
 {% block scripts %}
@@ -216,11 +165,43 @@ Novo plano de aula
 <script>
     var conteudos_selecionados = []
 
+    function mostrar_inf_gerais() {
+        // titulo = document.getElementById("id_titulo").value
+        // console.log(titulo)
+        document.getElementById("div_inf_gerais").style.display = 'block';
+        document.getElementById("div_montagem_programacao").style.display = 'none';
+        document.getElementById("div_midias").style.display = 'none';
+        trocar_cor("btn_inf_gerais", "btn_montagem_programacao", "btn_midias");
+    }
+
+    function mostrar_montagem_programacao() {
+        document.getElementById("div_inf_gerais").style.display = 'none';
+        document.getElementById("div_montagem_programacao").style.display = 'block';
+        document.getElementById("div_midias").style.display = 'none';
+        trocar_cor("btn_montagem_programacao", "btn_inf_gerais", "btn_midias");
+    }
+
+    function mostrar_execucao() {
+        document.getElementById("div_inf_gerais").style.display = 'none';
+        document.getElementById("div_montagem_programacao").style.display = 'none';
+        document.getElementById("div_midias").style.display = 'block';
+        trocar_cor("btn_midias", "btn_inf_gerais", "btn_montagem_programacao");
+    }
+
+    function trocar_cor(nova, antiga1, antiga2) {
+        document.getElementById(nova).classList.remove('btn-light');
+        document.getElementById(nova).classList.add('btn-success');
+        document.getElementById(antiga1).classList.remove('btn-success');
+        document.getElementById(antiga1).classList.add('btn-light');
+        document.getElementById(antiga2).classList.remove('btn-success');
+        document.getElementById(antiga2).classList.add('btn-light');
+    }
+
     function selecionar_conteudo(nome) {
         document.getElementById("div_disciplinas").style.display = 'none';
         document.getElementById("div_conteudos").style.display = 'block';
         document.getElementById("disciplina_selecionada").innerHTML = "" +
-                    "<a onclick='escolher_outro_conteudo()'>" +
+                    "<a onclick='escolher_outra_disciplina()'>" +
                     "   <i class='fa fa-arrow-left font-weight-bolder text-primary'></i>" +
                     "</a>" + 
                     " Disciplina: " + nome;
@@ -244,7 +225,7 @@ Novo plano de aula
         });
     }
 
-    function escolher_outro_conteudo() {
+    function escolher_outra_disciplina() {
         document.getElementById("div_disciplinas").style.display = 'block';
         document.getElementById("div_conteudos").style.display = 'none';
         $("#tabela_conteudos").find("tr:not(:first)").remove();
@@ -260,13 +241,11 @@ Novo plano de aula
             success: function (response) {
                 if (!conteudos_selecionados.includes(response['id'])) {
                     conteudos_selecionados.push(response['id'])
-                    // const para = document.createElement("p");
-                    // const node = document.createTextNode(disciplina + ": " + conteudo);
-                    // para.appendChild(node);
+                    document.getElementById("lista_id_conteudos").value=conteudos_selecionados
 
-                    var str = "<a onclick='remover_conteudo(" + response['id'] + ")' id='conteudo_selecionado_" + response['id'] + 
+                    var str = "<a class='text-sm opacity-8' onclick='remover_conteudo(" + response['id'] + ")' id='conteudo_selecionado_" + response['id'] + 
                         "'> " +
-                        " <i class='fas fa-trash font-weight-bolder text-danger'></i> " +
+                        " <i class='fas fa-minus font-weight-bolder text-danger'></i>  " +
                         disciplina + ": " + conteudo +
                         " </a>";
                     document.getElementById("div_conteudos_selecionados").innerHTML += str ;
@@ -278,6 +257,7 @@ Novo plano de aula
     function remover_conteudo(id) {
         const index = conteudos_selecionados.indexOf(id);
         conteudos_selecionados.splice(index, 1);
+        document.getElementById("lista_id_conteudos").value=conteudos_selecionados
         var elem = document.getElementById("conteudo_selecionado_"+id);
         elem.parentNode.removeChild(elem);
         console.log(conteudos_selecionados)

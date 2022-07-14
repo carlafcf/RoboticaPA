@@ -4,11 +4,35 @@ from django.forms import ModelForm
 
 from PlanoAula.models import PlanoAula
 
-class FormCriarPlano_aula(ModelForm):
+class FormInfGerais(ModelForm):
+        
+    required_css_class = 'required'
 
     class Meta:
         model = PlanoAula
-        fields = ('titulo', 'contextualizacao', 'descricao_atividade')
+        fields = ('titulo', 'contextualizacao', 'descricao_atividade', 'avaliacao')
+    
+        error_messages = {
+            'titulo': {
+                'required': "Esse campo é obrigatório.",
+            }
+        }
+
+class FormMontagem(ModelForm):
+        
+    required_css_class = 'required'
+
+    class Meta:
+        model = PlanoAula
+        fields = ('robo_equipamento', 'robo_descricao', 'robo_link')
+
+class FormProgramacao(ModelForm):
+        
+    required_css_class = 'required'
+    
+    class Meta:
+        model = PlanoAula
+        fields = ('prog_linguagem', 'prog_descricao', 'prog_link')
 
 
 class FormEditarPlano_aula(ModelForm):
