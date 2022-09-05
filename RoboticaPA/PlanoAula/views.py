@@ -95,7 +95,7 @@ def listar(request):
     encontrar_principais_conteudos(disciplinas)
 
     informacoes = {
-        'lista_planos_aula': planos_aula,
+        'lista_planos_aula': planos_aula[:10],
         'principais_conteudos': principais_conteudos,
         'inf_disciplinas': inf_disciplinas
     }
