@@ -34,6 +34,22 @@ class FormProgramacao(ModelForm):
         model = PlanoAula
         fields = ('prog_linguagem', 'prog_descricao', 'prog_link', 'prog_codigos')
 
+class FormMidiasRobo(ModelForm):
+        
+    required_css_class = 'required'
+    
+    class Meta:
+        model = PlanoAula
+        fields = ('robo_fotos', 'robo_videos', 'robo_pdf')
+
+class FormMidiasExecucao(ModelForm):
+        
+    required_css_class = 'required'
+    
+    class Meta:
+        model = PlanoAula
+        fields = ('exec_fotos', 'exec_videos')
+
 
 class FormEditarPlano_aula(ModelForm):
     titulo = forms.CharField(max_length=200, label='Titulo', widget=forms.Textarea)

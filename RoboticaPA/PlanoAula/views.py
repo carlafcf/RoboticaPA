@@ -40,30 +40,55 @@ def criar(request):
         form_inf_gerais = forms.FormInfGerais(request.POST)
         form_montagem = forms.FormMontagem(request.POST)
         form_programacao = forms.FormProgramacao(request.POST, request.FILES)
-        if (form_inf_gerais.is_valid() and form_montagem.is_valid() and form_programacao.is_valid()):
+        form_midias_robo = forms.FormMidiasRobo(request.POST, request.FILES)
+        form_midias_execucao = forms.FormMidiasExecucao(request.POST, request.FILES)
+        if (form_inf_gerais.is_valid() and form_montagem.is_valid() and form_programacao.is_valid()
+                and form_midias_robo.is_valid() and form_midias_execucao.is_valid()):
 
             conteudos = request.POST.get('lista_id_conteudos','').split(',')
 
             plano_aula = PlanoAula()
             plano_aula.responsavel = Usuario.objects.get(id=request.user.id)
+
+            # Informações gerais
             plano_aula.titulo = form_inf_gerais.cleaned_data['titulo']
             plano_aula.contextualizacao = form_inf_gerais.cleaned_data['contextualizacao']
             plano_aula.descricao_atividade = form_inf_gerais.cleaned_data['descricao_atividade']
             if (form_inf_gerais.cleaned_data['avaliacao'] != ""):
                 plano_aula.avaliacao = form_inf_gerais.cleaned_data['avaliacao']
+
+            # Montagem
             plano_aula.robo_equipamento = form_montagem.cleaned_data['robo_equipamento']
             plano_aula.robo_descricao = form_montagem.cleaned_data['robo_descricao']
             if (form_montagem.cleaned_data['robo_link'] != ""):
                 plano_aula.robo_link = form_montagem.cleaned_data['robo_link']
+
+            # Programação
             plano_aula.prog_linguagem = form_programacao.cleaned_data['prog_linguagem']
             plano_aula.prog_descricao = form_programacao.cleaned_data['prog_descricao']
             if (form_programacao.cleaned_data['prog_link'] != ""):
                 plano_aula.prog_link = form_programacao.cleaned_data['prog_link']
-            print(form_programacao.cleaned_data['prog_codigos'])
             if (form_programacao.cleaned_data['prog_codigos'] != ""):
                 plano_aula.prog_codigos = form_programacao.cleaned_data['prog_codigos']
+            
+            # Midias robo
+            if (form_midias_robo.cleaned_data['robo_fotos'] != ""):
+                plano_aula.robo_fotos = form_midias_robo.cleaned_data['robo_fotos']
+            if (form_midias_robo.cleaned_data['robo_videos'] != ""):
+                plano_aula.robo_videos = form_midias_robo.cleaned_data['robo_videos']
+            if (form_midias_robo.cleaned_data['robo_pdf'] != ""):
+                plano_aula.robo_pdf = form_midias_robo.cleaned_data['robo_pdf']
+
+            # Midias execução
+            if (form_midias_execucao.cleaned_data['exec_fotos'] != ""):
+                plano_aula.exec_fotos = form_midias_execucao.cleaned_data['exec_fotos']
+            if (form_midias_execucao.cleaned_data['exec_videos'] != ""):
+                plano_aula.exec_videos = form_midias_execucao.cleaned_data['exec_videos']
+
+            # Salvar
             plano_aula.save()
 
+            # Adicionar conteúdos
             for conteudo in conteudos:
                 plano_aula.conteudos.add(Conteudo.objects.get(id=int(conteudo)))
             
@@ -74,12 +99,16 @@ def criar(request):
         form_inf_gerais = forms.FormInfGerais()
         form_montagem = forms.FormMontagem()
         form_programacao = forms.FormProgramacao()
+        form_midias_robo = forms.FormMidiasRobo()
+        form_midias_execucao = forms.FormMidiasExecucao()
         lista_disciplinas = Disciplina.objects.filter(status="Ativo")
         lista_conteudos = Conteudo.objects.filter(status="Ativo")
         informacoes = {
             'form_inf_gerais': form_inf_gerais,
             'form_montagem': form_montagem,
             'form_programacao': form_programacao,
+            'form_midias_robo': form_midias_robo,
+            'form_midias_execucao': form_midias_execucao,
             'lista_disciplinas': lista_disciplinas,
             'lista_conteudos': lista_conteudos,
         }
@@ -155,9 +184,9 @@ class Editar(generic.UpdateView):
         success_url = reverse_lazy('plano_aula:listar')
         fieelds = ["titulo", "contextualizacao", "descricao_atividade"]
 
-#class Detalhe(generic.DetailView):
- #   model = PlanoAula
-  #  template_name = "PlanoAula/detalhes.html"        
+class Detalhe(generic.DetailView):
+   model = PlanoAula
+   template_name = "PlanoAula/detalhes.html"
 
 class Deletar(generic.DeleteView):
         model = PlanoAula
