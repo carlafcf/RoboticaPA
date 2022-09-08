@@ -39,7 +39,7 @@ def criar(request):
     if (request.method == 'POST'):
         form_inf_gerais = forms.FormInfGerais(request.POST)
         form_montagem = forms.FormMontagem(request.POST)
-        form_programacao = forms.FormProgramacao(request.POST)
+        form_programacao = forms.FormProgramacao(request.POST, request.FILES)
         if (form_inf_gerais.is_valid() and form_montagem.is_valid() and form_programacao.is_valid()):
 
             conteudos = request.POST.get('lista_id_conteudos','').split(',')
@@ -59,6 +59,9 @@ def criar(request):
             plano_aula.prog_descricao = form_programacao.cleaned_data['prog_descricao']
             if (form_programacao.cleaned_data['prog_link'] != ""):
                 plano_aula.prog_link = form_programacao.cleaned_data['prog_link']
+            print(form_programacao.cleaned_data['prog_codigos'])
+            if (form_programacao.cleaned_data['prog_codigos'] != ""):
+                plano_aula.prog_codigos = form_programacao.cleaned_data['prog_codigos']
             plano_aula.save()
 
             for conteudo in conteudos:

@@ -4,6 +4,10 @@ from django.utils import timezone
 from Usuario.models import Usuario
 from Disciplina.models import Conteudo
 
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return 'codigos/user_{0}/{1}'.format(instance.responsavel.id, filename)
+
 class PlanoAula(models.Model):
 
     responsavel = models.ForeignKey(Usuario, on_delete=models.RESTRICT,null=True, verbose_name="Responsável")
@@ -25,7 +29,7 @@ class PlanoAula(models.Model):
     prog_linguagem = models.CharField(max_length=200, verbose_name="Linguagem de programação", default="")
     prog_descricao = models.TextField(verbose_name="Descrição da programação", default="")
     prog_link = models.TextField(verbose_name="Links", blank=True, null=True)
-    # prog_codigos = models.ImageField(upload_to='robo-pic/', default='robo-pic/default.jpeg', blank=True, null=True)
+    prog_codigos = models.FileField(upload_to=user_directory_path, blank=True, null=True, verbose_name="Códigos")
 
     # Mídias
     # robo_fotos = models.ImageField(upload_to='robo-pic/', default='robo-pic/default.jpeg', blank=True, null=True)
@@ -42,3 +46,20 @@ class PlanoAula(models.Model):
         verbose_name = "Plano de aula"
         verbose_name_plural = "Planos de aula"
 
+class LikePlanoAula(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.RESTRICT,null=True, verbose_name="Usuário")
+    plano_aula = models.ForeignKey(PlanoAula, on_delete=models.RESTRICT,null=True, verbose_name="Plano de aula")
+
+    class Meta:
+        ordering = ['usuario']
+        verbose_name = "Like"
+        verbose_name_plural = "Likes"
+
+class ExecucaoPlanoAula(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.RESTRICT,null=True, verbose_name="Usuário")
+    plano_aula = models.ForeignKey(PlanoAula, on_delete=models.RESTRICT,null=True, verbose_name="Plano de aula")
+
+    class Meta:
+        ordering = ['usuario']
+        verbose_name = "Execução"
+        verbose_name_plural = "Execuções"

@@ -32,7 +32,7 @@ class FormProgramacao(ModelForm):
     
     class Meta:
         model = PlanoAula
-        fields = ('prog_linguagem', 'prog_descricao', 'prog_link')
+        fields = ('prog_linguagem', 'prog_descricao', 'prog_link', 'prog_codigos')
 
 
 class FormEditarPlano_aula(ModelForm):
