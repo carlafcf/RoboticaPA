@@ -187,6 +187,7 @@ class Editar(generic.UpdateView):
 class Detalhe(generic.DetailView):
    model = PlanoAula
    template_name = "PlanoAula/detalhes.html"
+   object_name = "plano_aula"
 
 class Deletar(generic.DeleteView):
         model = PlanoAula
