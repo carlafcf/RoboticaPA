@@ -48,7 +48,7 @@ class PlanoAula(models.Model):
 
 class LikePlanoAula(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.RESTRICT,null=True, verbose_name="Usuário")
-    plano_aula = models.ForeignKey(PlanoAula, on_delete=models.RESTRICT,null=True, verbose_name="Plano de aula")
+    plano_aula = models.ForeignKey(PlanoAula, related_name='likes', on_delete=models.RESTRICT,null=True, verbose_name="Plano de aula")
 
     class Meta:
         ordering = ['usuario']
@@ -57,7 +57,7 @@ class LikePlanoAula(models.Model):
 
 class ExecucaoPlanoAula(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.RESTRICT,null=True, verbose_name="Usuário")
-    plano_aula = models.ForeignKey(PlanoAula, on_delete=models.RESTRICT,null=True, verbose_name="Plano de aula")
+    plano_aula = models.ForeignKey(PlanoAula, related_name='execucoes', on_delete=models.RESTRICT,null=True, verbose_name="Plano de aula")
 
     class Meta:
         ordering = ['usuario']
