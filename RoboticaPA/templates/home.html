@@ -98,51 +98,57 @@ Planos de aula de robótica
 <div class="row">
 {% endif %}
 <div class="col-md-4">
-    <div class="card card-profile">
-      <img src="{% static 'assets/img/carousel-1.jpg' %}" alt="Image placeholder" class="card-img-top">
-      <div class="row justify-content-center">
-        <div class="col-4 col-lg-4 order-lg-2">
-          <div class="mt-n4 mt-lg-n6 mb-4 mb-lg-0">
-            <a href="javascript:;">
-              <img src="{% static 'assets/img/robo_icone.png' %}" class="rounded-circle img-fluid border border-2 border-white">
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="card-body pt-0">
-        <div class="row">
-          <div class="col">
-            <div class="d-flex justify-content-center">
-              <div class="d-grid text-center mx-4">
-                <span class="text-lg font-weight-bolder">{{ plano_aula.0.likes.count }}</span>
-                <span class="text-sm opacity-8">Likes</span>
-              </div>
-              <div class="d-grid text-center mx-4">
-                <span class="text-lg font-weight-bolder">{{ plano_aula.0.execucoes.count }}</span>
-                <span class="text-sm opacity-8">Execuções</span>
-              </div>
-              <div class="d-grid text-center mx-4">
-                <span class="text-lg font-weight-bolder">***</span>
-                <span class="text-sm opacity-8">Mídias</span>
-              </div>
+    <!-- <a href=""> -->
+        <div class="card card-profile">
+            <a href="{% url 'plano_aula:detalhes' pk=plano_aula.0.id %}">
+            <img src="{% static 'assets/img/carousel-1.jpg' %}" alt="Image placeholder" class="card-img-top">
+            <div class="row justify-content-center">
+                <div class="col-4 col-lg-4 order-lg-2">
+                <div class="mt-n4 mt-lg-n6 mb-4 mb-lg-0">
+                    <a href="javascript:;">
+                    <img src="{% static 'assets/img/robo_icone.png' %}" class="rounded-circle img-fluid border border-2 border-white">
+                    </a>
+                </div>
+                </div>
             </div>
-          </div>
+            </a>
+            <a href="{% url 'plano_aula:detalhes' pk=plano_aula.0.id %}">
+            <div class="card-body pt-0">
+                <div class="row">
+                <div class="col">
+                    <div class="d-flex justify-content-center">
+                    <div class="d-grid text-center mx-4">
+                        <span class="text-lg font-weight-bolder">{{ plano_aula.0.likes.count }}</span>
+                        <span class="text-sm opacity-8">Likes</span>
+                    </div>
+                    <div class="d-grid text-center mx-4">
+                        <span class="text-lg font-weight-bolder">{{ plano_aula.0.execucoes.count }}</span>
+                        <span class="text-sm opacity-8">Execuções</span>
+                    </div>
+                    <div class="d-grid text-center mx-4">
+                        <span class="text-lg font-weight-bolder">***</span>
+                        <span class="text-sm opacity-8">Mídias</span>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                <div class="text-center mt-4">
+                <h5>
+                    {{ plano_aula.0.titulo }}
+                </h5>
+                <div class="h6 font-weight-300">
+                    {% for conteudo in plano_aula.0.conteudos.all %}
+                        {{ conteudo.nome }}, {{ conteudo.disciplina }}
+                    {% endfor %}
+                </div>
+                <div class="overflow-auto" style="height:200px">
+                    <i class="ni education_hat mr-2"></i>{{ plano_aula.0.descricao_atividade|linebreaks }}
+                </div>
+                </div>
+            </div>
+            </a>
         </div>
-        <div class="text-center mt-4">
-          <h5>
-            {{ plano_aula.0.titulo }}
-          </h5>
-          <div class="h6 font-weight-300">
-            {% for conteudo in plano_aula.0.conteudos.all %}
-                {{ conteudo.nome }}, {{ conteudo.disciplina }}
-            {% endfor %}
-          </div>
-          <div class="overflow-auto" style="height:200px">
-            <i class="ni education_hat mr-2"></i>{{ plano_aula.0.descricao_atividade|linebreaks }}
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- </a> -->
   </div>
 
 {% if forloop.counter|divisibleby:3 %}
