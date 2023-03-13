@@ -49,7 +49,10 @@ INSTALLED_APPS = [
     'bootstrap5', #pip install django-bootstrap-v5
     # python -m pip install Pillow
     'widget_tweaks', # pip install django-widget-tweaks
+    'crispy_forms', #pip install django-crispy-forms
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

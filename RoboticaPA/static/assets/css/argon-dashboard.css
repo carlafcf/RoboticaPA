@@ -5639,14 +5639,34 @@ fieldset:disabled .btn {
 .card-header {
   padding: 0.5rem 1rem;
   margin-bottom: 0;
-  /* background-color: #fff; */
-  background-color: var(--bs-primary);
+  background-color: #fff;
+  /* background-color: var(--bs-primary); */
   /* background-color: #8392ab; */
   border-bottom: 0 solid rgba(0, 0, 0, 0.125);
 }
 
+.card-header.home {
+  /* padding: 0.5rem 1rem; */
+  /* margin-bottom: 0; */
+  /* background-color: #fff; */
+  background-color: var(--bs-primary);
+  /* background-color: #8392ab; */
+  /* border-bottom: 0 solid rgba(0, 0, 0, 0.125); */
+}
+
 .card-header.plano-aula {
-  background-color: var(--bs-yellow);
+  /* padding: 0.5rem 1rem; */
+  /* margin-bottom: 0; */
+  /* background-color: #fff; */
+  background-color: var(--bs-gray-200);
+  /* background-color: #8392ab; */
+  /* border-bottom: 0 solid rgba(0, 0, 0, 0.125); */
+}
+
+.card.plano-aula {
+  background-color: #fff;
+  border: 3px solid var(--bs-primary);
+  /* background-color: var(--bs-yellow); */
 }
 
 .card-header:first-child {

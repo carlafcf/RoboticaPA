@@ -225,19 +225,19 @@ def listar_usuario(request, pk):
 
 
 class Editar(generic.UpdateView):
-        model = PlanoAula
-        form_class = forms.FormEditarPlano_aula
-        template_name = 'PlanoAula/editar.html'
-        success_url = reverse_lazy('plano_aula:listar')
-        fieelds = ["titulo", "contextualizacao", "descricao_atividade"]
+    model = PlanoAula
+    form_class = forms.FormEditarPlano_aula
+    template_name = 'PlanoAula/editar.html'
+    success_url = reverse_lazy('plano_aula:listar')
+    fieelds = ["titulo", "contextualizacao", "descricao_atividade"]
 
 class Detalhe(generic.DetailView):
    model = PlanoAula
    template_name = "PlanoAula/detalhes.html"
-   object_name = "plano_aula"
+   context_object_name = "plano_aula"
 
 class Deletar(generic.DeleteView):
-        model = PlanoAula
-        template_name = 'PlanoAula/deletar.html'
-        success_url = reverse_lazy('plano_aula:listar')
+    model = PlanoAula
+    template_name = 'PlanoAula/deletar.html'
+    success_url = reverse_lazy('plano_aula:listar')
 
