@@ -241,3 +241,8 @@ class Deletar(generic.DeleteView):
     template_name = 'PlanoAula/deletar.html'
     success_url = reverse_lazy('plano_aula:listar')
 
+class Programacao(generic.DetailView):
+   model = PlanoAula
+   template_name = "PlanoAula/programacao.html"
+   context_object_name = "plano_aula"
+
