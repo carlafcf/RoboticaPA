@@ -1,6 +1,12 @@
 {% extends "Base/base.html" %} {% block breadcrumb1 %} Plano de aula {% endblock %} {% block breadcrumb2 %} Informações {% endblock %} {% block titulo %} {{plano_aula}} {% endblock %} {% block conteudo %}
 <br>
 
+<div class="p-3 text-center">
+    <button id="btn_inf_gerais" class="btn btn-success" onclick="mostrar_inf_gerais()">Informações gerais</button>
+    <button id="btn_montagem_programacao" class="btn btn-light" onclick="mostrar_montagem_programacao()">Montagem e Programação</button>
+    <button id="btn_midias" class="btn btn-light" onclick="mostrar_execucao()">Mídias</button>
+</div>
+
 <div class="row">
     <div class="col-lg-4 col-md-0">
 
