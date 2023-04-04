@@ -9,8 +9,12 @@
 <body>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form_usuario.as_p }}
         <input type="submit" value="Finalizar cadastro">
     </form>
+
+    {% for disciplina in disciplinas %}
+        {{ disciplina.nome }}
+    {% endfor %}
 </body>
 </html>

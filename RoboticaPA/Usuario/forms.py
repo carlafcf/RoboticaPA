@@ -26,7 +26,7 @@ class FormCompletarCadastro(ModelForm):
 
     class Meta:
         model = Usuario
-        fields = ('first_name', 'last_name', 'cidade', 'estado', 'avatar')
+        fields = ('first_name', 'last_name', 'cidade', 'estado')
 
     def save(self, commit=True):
         # Save the provided password in hashed format
@@ -34,6 +34,12 @@ class FormCompletarCadastro(ModelForm):
         if commit:
             user.save()
         return user
+
+# class FormAtualizarInteresses(ModelForm):
+
+#     class Meta:
+#         model = Interesses
+#         fields = ('disciplina')
 
 class FormEditarUsuario(ModelForm):
     # password1 = forms.CharField(label='Senha', widget=forms.PasswordInput)
