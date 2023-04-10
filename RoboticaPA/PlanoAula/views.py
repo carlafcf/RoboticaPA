@@ -152,6 +152,22 @@ def listar(request):
 
     return render(request, "PlanoAula/listar.html", informacoes)
 
+@login_required
+def listar_todos(request):
+    planos_aula = PlanoAula.objects.all()
+
+    informacoes = {
+        'lista_planos_aula': planos_aula
+    }
+
+    return render(request, "PlanoAula/listar.html", informacoes)
+
+class ListarTodos(generic.ListView):
+    model = PlanoAula
+    template_name = 'PlanoAula/listar.html'
+    context_object_name = 'lista_planos_aula'
+    paginate_by = 15
+
 def encontrar_planos_aula_disciplina(planos_aula, disciplinas):
 
     inf_disciplinas = []

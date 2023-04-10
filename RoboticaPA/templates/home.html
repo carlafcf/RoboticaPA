@@ -77,7 +77,6 @@
     <div id="div_home_inicial">
         <br> {% for plano_aula in principais_planos_aula %} {% if forloop.counter|divisibleby:4 == True or forloop.counter == 1 %}
         <div class="row">
-            <p>Ta na inicial</p>
             {% endif %}
             <div class="col-md-4">
                 <!-- <a href=""> -->
@@ -132,8 +131,7 @@
             {% if forloop.counter|divisibleby:3 %}
         </div>
         <br> {% endif %} {% endfor %}
-
-        <button id="btn_vertudo" class="btn btn-light" onclick="mostrar_tudo()">Ver Todos</button>
+        <a class="text-center" href="">Ver Todos</a>
     </div>
 
     <!--Inicio da segunda-->
