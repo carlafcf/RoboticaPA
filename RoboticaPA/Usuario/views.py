@@ -51,6 +51,7 @@ class Cadastrar(generic.CreateView):
     template_name = 'Usuario/cadastrar.html'
     success_url = reverse_lazy('usuario:login')
 
+
 class CompletarCadastro(LoginRequiredMixin, generic.UpdateView):
     model = Usuario
     form_class = forms.FormCompletarCadastro

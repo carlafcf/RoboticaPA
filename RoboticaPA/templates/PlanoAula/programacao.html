@@ -1,3 +1,4 @@
+
 {% extends "Base/base.html" %}
 
 {% block breadcrumb1 %}
@@ -67,8 +68,6 @@
 </div>
   
     
-
- 
 <ul>
     {% for aula in lista_planos_aula %}
     <li><a href="{% url 'plano_aula:programacao' pk=aula.id %}">{{aula}}</a></li>

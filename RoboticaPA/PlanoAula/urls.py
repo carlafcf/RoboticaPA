@@ -15,5 +15,6 @@ urlpatterns = [
     path('editar/<int:pk>/', views.Editar.as_view(), name='editar'),
     path('listar/<int:pk>', views.listar_usuario, name='listar_usuario'),
     path('listar/', views.listar, name='listar'),
+    path('programacao/<int:pk>/', views.Programacao.as_view(), name='programacao'),
 
 ]
