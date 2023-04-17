@@ -4,6 +4,7 @@ from django import forms
 from django.forms import ModelForm
 
 from Usuario.models import Usuario
+from Usuario.models import Interesses
 
 
 class FormCriarUsuario(auth_forms.UserCreationForm):
@@ -34,6 +35,12 @@ class FormCompletarCadastro(ModelForm):
         if commit:
             user.save()
         return user
+
+class FormAtualizarInteresses(ModelForm):
+
+     class Meta:
+         model = Interesses
+         fields = ('disciplina', )
 
 class FormEditarUsuario(ModelForm):
     # password1 = forms.CharField(label='Senha', widget=forms.PasswordInput)

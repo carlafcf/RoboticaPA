@@ -7,6 +7,7 @@ from django.views import generic
 
 from Usuario import forms
 from Usuario.models import Usuario
+from Disciplina.models import Disciplina
 
 @login_required
 def listar_ativos(request):
@@ -51,6 +52,29 @@ class Cadastrar(generic.CreateView):
     template_name = 'Usuario/cadastrar.html'
     success_url = reverse_lazy('usuario:login')
 
+def completar_cadastro(request, pk):
+
+    disciplinas = Disciplina.objects.filter(status='Ativo')
+
+    if (request.method == "POST"):
+        form_usuario = forms.FormCompletarCadastro(request.POST)
+        if (form_usuario.is_valid()):
+            usuario = Usuario.objects.get(pk=pk)
+            usuario.first_name = form_usuario.cleaned_data['first_name']
+            usuario.last_name = form_usuario.cleaned_data['last_name']
+            usuario.cidade = form_usuario.cleaned_data['cidade']
+            usuario.estado = form_usuario.cleaned_data['estado']
+            usuario.save()
+    else:
+        form_usuario = forms.FormCompletarCadastro()
+        form_interesses = forms.FormAtualizarInteresses()
+    
+    informacoes = {
+        'form_usuario': form_usuario,
+        'form_interesses': form_interesses,
+        'disciplinas': disciplinas
+    }
+    return render(request, "usuario/completar_cadastro.html", informacoes)
 
 class CompletarCadastro(LoginRequiredMixin, generic.UpdateView):
     model = Usuario

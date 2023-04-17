@@ -25,20 +25,22 @@
                 <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
                     <div class="card z-index-0">
                         <div class="card-header text-center pt-4">
-                            <h5>Cadastro</h5>
+                            <h5>Cadastro
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard2-check" viewBox="0 0 16 16" style="color:lawngreen">
+                                    <path d="M9.5 0a.5.5 0 0 1 .5.5.5.5 0 0 0 .5.5.5.5 0 0 1 .5.5V2a.5.5 0 0 1-.5.5h-5A.5.5 0 0 1 5 2v-.5a.5.5 0 0 1 .5-.5.5.5 0 0 0 .5-.5.5.5 0 0 1 .5-.5h3Z"/>
+                                    <path d="M3 2.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 0 0-1h-.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1H12a.5.5 0 0 0 0 1h.5a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5v-12Z"/>
+                                    <path d="M10.854 7.854a.5.5 0 0 0-.708-.708L7.5 9.793 6.354 8.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3Z"/>
+                                  </svg>
+                            </h5>
                         </div>
                         <div class="card-body">
                             <form role="form" method="post">
-                                {% csrf_token %} {% for field in form %}
+                                {% csrf_token %} {% for field in form_usuario %}
                                 <div class="mb-3">
                                     <label class="form-control-label">{{ field.label }}</label> {% render_field field class="form-control" %}
                                     <span class="text-sm opacity-8">{{ field.errors }}</span>
                                 </div>
                                 {% endfor %}
-                                <div class="text-center">
-                                    <button type="submit" class="btn bg-gradient-dark w-100 my-4 mb-2">Salvar</button>
-                                </div>
-                                <p class="text-sm mt-3 mb-0">Já tem uma conta? <a href="{% url 'usuario:login' %}" class="text-dark font-weight-bolder">Faça login</a></p>
                             </form>
                         </div>
                     </div>
@@ -47,11 +49,17 @@
                 <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
                     <div class="card z-index-0">
                         <div class="card-header text-center pt-4">
-                            <h5>Interesse</h5>
+                            <h5>Interesse
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard2-check" viewBox="0 0 16 16" style="color: red;">
+                                        <path d="M9.5 0a.5.5 0 0 1 .5.5.5.5 0 0 0 .5.5.5.5 0 0 1 .5.5V2a.5.5 0 0 1-.5.5h-5A.5.5 0 0 1 5 2v-.5a.5.5 0 0 1 .5-.5.5.5 0 0 0 .5-.5.5.5 0 0 1 .5-.5h3Z"/>
+                                        <path d="M3 2.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 0 0-1h-.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1H12a.5.5 0 0 0 0 1h.5a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5v-12Z"/>
+                                        <path d="M10.854 7.854a.5.5 0 0 0-.708-.708L7.5 9.793 6.354 8.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3Z"/>
+                                      </svg>
+                            </h5>
                         </div>
                         <div class="card-body">
                             <div class="form-check">
-                                {% for disciplina in disciplinas %}
+                                {% for disciplina in form_interesses %}
                                 <input class="form-check-input" type="radio" name="blackRadio" id="blackRadio1">
 
                                 <div class="d-flex flex-column">
@@ -70,6 +78,10 @@
             </div>
         </div>
     </main>
+    <div class="col-lg-12" style="text-align: right;">
+        <button class="btn btn-danger " type="submit" style="font-size: 16px;">Agora Não</button>
+        <button class="btn btn-success " type="submit" style="font-size: 16px; margin-right: 50px;">Enviar</button>
+    </div>
     {% include "Base/rodape.html" %} {% include "Base/scripts.html" %}
 
     <script>
