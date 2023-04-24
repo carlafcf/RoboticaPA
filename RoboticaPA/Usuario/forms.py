@@ -3,7 +3,8 @@ from django.contrib.auth import forms as auth_forms
 from django import forms
 from django.forms import ModelForm
 
-from Usuario.models import Usuario
+from Usuario.models import Usuario, Interesses
+from Disciplina.models import Disciplina
 
 
 class FormCriarUsuario(auth_forms.UserCreationForm):
@@ -35,11 +36,17 @@ class FormCompletarCadastro(ModelForm):
             user.save()
         return user
 
-# class FormAtualizarInteresses(ModelForm):
+class FormAtualizarInteresses(ModelForm):
 
-#     class Meta:
-#         model = Interesses
-#         fields = ('disciplina')
+    disciplina = forms.ModelMultipleChoiceField(label='Disciplinas', queryset=Disciplina.objects.all(), widget=forms.CheckboxSelectMultiple)
+
+    class Meta:
+        model = Interesses
+        fields = (('disciplina',))
+        widgets = {
+            'disciplina' : forms.CheckboxInput(attrs={'class': 'checkbox form-control'}),   
+        }
+
 
 class FormEditarUsuario(ModelForm):
     # password1 = forms.CharField(label='Senha', widget=forms.PasswordInput)

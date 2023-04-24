@@ -11,6 +11,7 @@ urlpatterns = [
     path('cadastrar/', views.Cadastrar.as_view(), name="cadastrar"),
     # path('completar_cadastro/<int:pk>', views.CompletarCadastro.as_view(), name="completar_cadastro"),
     path('completar_cadastro/<int:pk>', views.completar_cadastro, name="completar_cadastro"),
+    path('post/completar_cadastro', views.completar_cadastro_usuario, name = "completar_cadastro_usuario"),
     path('editar/<int:pk>', views.Editar.as_view(), name = 'editar'),
     path('alterar_avatar/<int:pk>/<int:novo>', views.alterar_avatar, name = 'alterar_avatar'),
     path('alterar_senha/<int:pk>', views.AlterarSenha.as_view(), name = 'alterar_senha'),
