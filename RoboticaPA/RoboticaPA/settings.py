@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     # python -m pip install Pillow
     'widget_tweaks', # pip install django-widget-tweaks
     'crispy_forms', #pip install django-crispy-forms
+    'django_filters', #pip install django-filter
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
