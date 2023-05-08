@@ -48,33 +48,34 @@
                     </div>
                 </div>
 
-                <!-- <div class="toast-container position-fixed bottom-0 end-0 p-3">
-                    <div id="toast_usuario" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                      <div class="toast-header">
-                        <strong class="me-auto">Complementando o cadastro</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                      </div>
-                      <div class="toast-body">
-                        As informações pessoais do usuário foram atualizadas com sucesso.
-                      </div>
-                    </div>
-                  </div> -->
-
                 <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
                     <div class="card z-index-0">
                         <div class="card-header text-center pt-4">
                             <h5>Interesses</h5>
                         </div>
                         <div class="card-body">
-                            <form role="form" method="post">
-                                {% csrf_token %} 
-                                {% for field in form_interesses %}
-                                    {{ field }}
+                            <!-- <form id="form_interesses" role="form" method="post"> -->
+                                <!-- {% csrf_token %}  -->
+                                <!-- {% for checkbox in form_interesses %}
+                                    <div class="checkbox">
+                                        <label>
+                                                {{ checkbox.tag }} {{ checkbox.choice_label }}
+                                        </label>
+                                    </div>
+                                {% endfor %} -->
+                                {% for disciplina in disciplinas %}
+                                    <button onclick="alterar_interesse({{disciplina.id}})" style="background-color: transparent; border-color: transparent; box-shadow: none;">
+                                        {% if disciplina.id in interesses %}
+                                            <span id="btn_disc_{{disciplina.id}}" class="badge badge-sm bg-gradient-primary">{{ disciplina.nome }}</span>
+                                        {% else %}
+                                            <span id="btn_disc_{{disciplina.id}}" class="badge badge-sm bg-gradient-secondary">{{ disciplina.nome }}</span>
+                                        {% endif %}
+                                    </button>
                                 {% endfor %}
                                 <div class="text-center">
                                     <button name="form_interesses" type="submit" class="btn bg-gradient-dark w-100 my-4 mb-2">Salvar</button>
                                 </div>
-                            </form>
+                            <!-- </form> -->
                         </div>
                     </div>
                 </div>
@@ -91,7 +92,18 @@
                         As informações pessoais do usuário foram atualizadas com sucesso.
                       </div>
                     </div>
-                  </div>
+                </div>
+                <div class="position-fixed p-3">
+                    <div id="toast_interesses" class="toast hide bottom-0 end-0 position-fixed p-3" role="alert" aria-live="assertive" aria-atomic="true"  style="z-index: 9998">
+                      <div class="toast-header">
+                        <strong class="me-auto">Complementando o cadastro</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                      </div>
+                      <div class="toast-body">
+                        Os interesses do usuário foram atualizados com sucesso.
+                      </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -99,6 +111,17 @@
 
     {% block scripts %}
     <script>
+        var interesses_selecionados = []
+        for (var i = 0; i < {{interesses}}.length; i++) {
+            interesses_selecionados.push({{interesses}}[i])
+        }
+
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     var interesses = '{{ interesses }}';
+        //     console.log(interesses)
+        //     ineteresses_selecionados.
+        // });
+
         $("#form_usuario").submit(function (e) {
             e.preventDefault();
             var serializedData = $(this).serialize();
@@ -113,10 +136,42 @@
                 },
                 error: function (response) {
                     // alert the error if any error occured
-                    alert(response["responseJSON"]["error"]);
                 }
             })
         })
+
+        $("#form_interesses").submit(function (e) {
+            e.preventDefault();
+            var serializedData = $(this).serialize();
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'usuario:completar_cadastro_interesses' %}",
+                data: serializedData,
+                success: function (response) {
+                    const toast = document.getElementById('toast_interesses')
+                    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toast)
+                    toastBootstrap.show()
+                },
+                error: function (response) {
+                    // alert the error if any error occured
+                }
+            })
+        })
+
+        function alterar_interesse(id_elemento) {
+            var elemento = "btn_disc_"+id_elemento
+            if (document.getElementById(elemento).classList.contains("bg-gradient-secondary")) {
+                interesses_selecionados.push(id_elemento)
+                document.getElementById(elemento).classList.remove('bg-gradient-secondary');
+                document.getElementById(elemento).classList.add('bg-gradient-primary');
+            }
+            else {
+                const index = interesses_selecionados.indexOf(id_elemento);
+                interesses_selecionados.splice(index, 1);
+                document.getElementById(elemento).classList.add('bg-gradient-secondary');
+                document.getElementById(elemento).classList.remove('bg-gradient-primary');
+            }
+        }
     </script>
     {% endblock scripts %}
 

@@ -9,7 +9,7 @@ from django.http import JsonResponse
 from django.core import serializers
 
 from Usuario import forms
-from Usuario.models import Usuario
+from Usuario.models import Usuario, Interesses
 from Disciplina.models import Disciplina
 
 @login_required
@@ -59,6 +59,8 @@ def completar_cadastro(request, pk):
 
     disciplinas = Disciplina.objects.filter(status='Ativo')
 
+    interesses = list(Interesses.objects.filter(usuario = Usuario.objects.get(id =request.user.pk)).values_list('disciplina', flat=True))
+
     if (request.method == "POST"):
         # if 'form_usuario' in request.POST:
         #     form_usuario = forms.FormCompletarCadastro(request.POST)
@@ -81,11 +83,33 @@ def completar_cadastro(request, pk):
         informacoes = {
             'form_usuario': form_usuario,
             'form_interesses': form_interesses,
-            'disciplinas': disciplinas
+            'disciplinas': disciplinas,
+            'interesses': interesses
         }
         return render(request, "usuario/completar_cadastro.html", informacoes)
 
 def completar_cadastro_usuario(request):
+    if request.method == "POST":
+        usuario = Usuario.objects.get(pk=request.user.id)
+        usuario.first_name = request.POST['first_name']
+        usuario.last_name = request.POST['last_name']
+        usuario.cidade = request.POST['cidade']
+        usuario.estado = request.POST['estado']
+        usuario.save()
+        res = {'error': False, 'msg': "Successfully Submited."}
+        return JsonResponse(res)
+    if request.is_ajax and request.method == "POST":
+        form_usuario = forms.FormCompletarCadastro(request.POST)
+        if form_usuario.is_valid():
+            instance = form_usuario.save()
+            ser_instance = serializers.serialize('json', [ instance, ])
+            return JsonResponse({"instance": ser_instance}, status=200)
+        else:
+            return JsonResponse({"error": form_usuario.errors}, status=400)
+
+    return JsonResponse({"error": ""}, status=400)
+
+def completar_cadastro_interesses(request):
     print(request.user.id)
     if request.method == "POST":
         usuario = Usuario.objects.get(pk=request.user.id)
@@ -99,22 +123,12 @@ def completar_cadastro_usuario(request):
     if request.is_ajax and request.method == "POST":
         form_usuario = forms.FormCompletarCadastro(request.POST)
         if form_usuario.is_valid():
-            # usuario = Usuario.objects.get(pk=request.user.id)
-            # usuario.first_name = form_usuario.cleaned_data['first_name']
-            # usuario.last_name = form_usuario.cleaned_data['last_name']
-            # usuario.cidade = form_usuario.cleaned_data['cidade']
-            # usuario.estado = form_usuario.cleaned_data['estado']
-            # usuario.save()
             instance = form_usuario.save()
-            # serialize in new friend object in json
             ser_instance = serializers.serialize('json', [ instance, ])
-            # send to client side.
             return JsonResponse({"instance": ser_instance}, status=200)
         else:
-            # some form errors occured.
             return JsonResponse({"error": form_usuario.errors}, status=400)
 
-    # some error occured
     return JsonResponse({"error": ""}, status=400)
 
 class CompletarCadastro(LoginRequiredMixin, generic.UpdateView):

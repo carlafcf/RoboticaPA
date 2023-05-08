@@ -196,6 +196,12 @@ address {
   line-height: inherit;
 }
 
+/* Remover a lista da tela Completar_interesses */
+ul
+{
+    list-style-type: none;
+}
+
 ol,
 ul {
   padding-left: 2rem;

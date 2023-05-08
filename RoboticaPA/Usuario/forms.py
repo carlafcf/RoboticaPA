@@ -38,14 +38,17 @@ class FormCompletarCadastro(ModelForm):
 
 class FormAtualizarInteresses(ModelForm):
 
-    disciplina = forms.ModelMultipleChoiceField(label='Disciplinas', queryset=Disciplina.objects.all(), widget=forms.CheckboxSelectMultiple)
+    # disciplina = forms.ModelChoiceField(label='Disciplinas', queryset=Disciplina.objects.all(), widget=forms.CheckboxSelectMultiple)
+    # disciplina = forms.ModelMultipleChoiceField(label='Disciplinas', 
+                                                # queryset=Disciplina.objects.all(), 
+                                                # widget=forms.CheckboxSelectMultiple(attrs={'style': 'list-style:none;'}))
 
     class Meta:
         model = Interesses
         fields = (('disciplina',))
-        widgets = {
-            'disciplina' : forms.CheckboxInput(attrs={'class': 'checkbox form-control'}),   
-        }
+        # widgets = {
+        #     'disciplina' : forms.CheckboxInput(attrs={'class': 'checkbox form-control', 'style': 'list-style:none;'}),   
+        # }
 
 
 class FormEditarUsuario(ModelForm):
