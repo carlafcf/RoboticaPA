@@ -59,19 +59,17 @@
                         </div>
                         <div class="card-body">
                             <div class="form-check">
-                                {% for disciplina in form_interesses %}
-                                <input class="form-check-input" type="radio" name="blackRadio" id="blackRadio1">
-
-                                <div class="d-flex flex-column">
-                                    <h6 class="mb-1 text-dark text-sm">{{ disciplina.0 }}</h6>
-                                    <span class="text-xs">{{ disciplina.1 }}
-                                        <span class="font-weight-bold">{% if disciplina.1 == 1 %}aula</span>
-                                    <span {% else %} aulas></span>
-                                    </span>
-                                    {% endif %}
-                                </div>
+                                {% for disciplina in disciplinas %}
+                                    <div class="d-flex flex-column">
+                                        <h6 class="mb-1 text-dark text-sm">{{ disciplina.nome }}</h6>
+                                        <span class="text-xs">{{ disciplina.conteudos.count }}
+                                            {% if disciplina.conteudos.count == 1 %} aula
+                                            {% else %} aulas
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                {% endfor %}
                             </div>
-                            {% endfor %}
                         </div>
                     </div>
                 </div>
