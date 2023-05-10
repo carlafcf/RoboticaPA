@@ -9,62 +9,51 @@
 
 <body class="">
     <main class="main-content mt-0">
-        <div class="page-header align-items-start min-vh-50 m-3 border-radius-lg" style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signup-cover.jpg'); background-position: top;">
-            <span class="mask bg-gradient-dark opacity-6"></span>
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-10 text-center mx-auto">
-                        <h1 class="text-white mb-2 mt-5">Complemente seu cadastro!</h1>
-                        <p class="text-lead text-white">Complemente seu cadastro com seus dados pessoais e interesses,
-                            para poder ter uma melhor experiência no XXX.</p>
-                    </div>
-                    <div class="col-lg-2">
-                        <button class="btn bg-success w-100 my-4 mb-2 text-white">Continuar</button>
+        <form id="form_usuario" role="form" method="post">
+            {% csrf_token %}
+            <div class="page-header align-items-start min-vh-50 m-3 border-radius-lg" style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signup-cover.jpg'); background-position: top;">
+                <span class="mask bg-gradient-dark opacity-6"></span>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10 text-center mx-auto">
+                            <h1 class="text-white mb-2 mt-5">Complemente seu cadastro!</h1>
+                            <p class="text-lead text-white">Complemente seu cadastro com seus dados pessoais e interesses,
+                                para poder ter uma melhor experiência no XXX.</p>
+                        </div>
+                        <div class="col-lg-2">
+                            <button type="submit" class="btn bg-success w-100 my-4 mb-2 text-white">Continuar</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="container">
-            <div class="row mt-lg-n10 mt-md-n11 mt-n10 justify-content-center">
-                <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
-                    <div class="card z-index-0">
-                        <div class="card-header text-center pt-4">
-                            <h5>Informações pessoais</h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="form_usuario" role="form" method="post">
-                                {% csrf_token %}
+            <div class="container">
+                <div class="row mt-lg-n10 mt-md-n11 mt-n10 justify-content-center">
+                    <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
+                        <div class="card z-index-0">
+                            <div class="card-header text-center pt-4">
+                                <h5>Informações pessoais</h5>
+                            </div>
+                            <div class="card-body">
+                                <input type="hidden" id="lista_interesses" name="lista_interesses"></input>
                                 {% for field in form_usuario %}
                                     <div class="mb-3">
                                         <label class="form-control-label">{{ field.label }}</label> {% render_field field class="form-control" %}
                                         <span class="text-sm opacity-8">{{ field.errors }}</span>
                                     </div>
                                 {% endfor %}
-                                <div class="text-center">
-                                    <button name="form_usuario" type="submit" class="btn bg-gradient-dark w-100 my-4 mb-2">Salvar</button>
-                                </div>
-                            </form>
+                                <!-- <div class="text-center"> -->
+                                    <!-- <button name="form_usuario" type="submit" class="btn bg-gradient-dark w-100 my-4 mb-2">Salvar</button> -->
+                                <!-- </div> -->
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
-                    <div class="card z-index-0">
-                        <div class="card-header text-center pt-4">
-                            <h5>Interesses</h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="form_interesses" role="form" method="post">
-                                {% csrf_token %} 
-
-                                <input type="hidden" id="lista_interesses" name="lista_interesses"></input>
-                                <!-- {% for checkbox in form_interesses %}
-                                    <div class="checkbox">
-                                        <label>
-                                                {{ checkbox.tag }} {{ checkbox.choice_label }}
-                                        </label>
-                                    </div>
-                                {% endfor %} -->
+                    <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
+                        <div class="card z-index-0">
+                            <div class="card-header text-center pt-4">
+                                <h5>Interesses</h5>
+                            </div>
+                            <div class="card-body">
                                 {% for disciplina in disciplinas %}
                                     <a onclick="alterar_interesse({{disciplina.id}})" style="background-color: transparent; border-color: transparent; box-shadow: none;">
                                         {% if disciplina.id in interesses %}
@@ -74,40 +63,15 @@
                                         {% endif %}
                                     </a>
                                 {% endfor %}
-                                <div class="text-center">
+                                <!-- <div class="text-center">
                                     <button name="form_interesses" type="submit" class="btn bg-gradient-dark w-100 my-4 mb-2">Salvar</button>
-                                </div>
-                            </form>
+                                </div> -->
+                            </div>
                         </div>
                     </div>
                 </div>
-
-
-
-                <div class="position-fixed p-3">
-                    <div id="toast_usuario" class="toast hide bottom-0 end-0 position-fixed p-3" role="alert" aria-live="assertive" aria-atomic="true"  style="z-index: 9998">
-                      <div class="toast-header">
-                        <strong class="me-auto">Complementando o cadastro</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                      </div>
-                      <div class="toast-body">
-                        As informações pessoais do usuário foram atualizadas com sucesso.
-                      </div>
-                    </div>
-                </div>
-                <div class="position-fixed p-3">
-                    <div id="toast_interesses" class="toast hide bottom-0 end-0 position-fixed p-3" role="alert" aria-live="assertive" aria-atomic="true"  style="z-index: 9998">
-                      <div class="toast-header">
-                        <strong class="me-auto">Complementando o cadastro</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                      </div>
-                      <div class="toast-body">
-                        Os interesses do usuário foram atualizados com sucesso.
-                      </div>
-                    </div>
-                </div>
             </div>
-        </div>
+        </form>
     </main>
     {% include "Base/rodape.html" %} {% include "Base/scripts.html" %}
 
@@ -118,48 +82,6 @@
             interesses_selecionados.push({{interesses}}[i])
         }
         document.getElementById("lista_interesses").value = interesses_selecionados
-
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     var interesses = '{{ interesses }}';
-        //     console.log(interesses)
-        //     ineteresses_selecionados.
-        // });
-
-        $("#form_usuario").submit(function (e) {
-            e.preventDefault();
-            var serializedData = $(this).serialize();
-            $.ajax({
-                type: 'POST',
-                url: "{% url 'usuario:completar_cadastro_usuario' %}",
-                data: serializedData,
-                success: function (response) {
-                    const toast = document.getElementById('toast_usuario')
-                    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toast)
-                    toastBootstrap.show()
-                },
-                error: function (response) {
-                    // alert the error if any error occured
-                }
-            })
-        })
-
-        $("#form_interesses").submit(function (e) {
-            e.preventDefault();
-            var serializedData = $(this).serialize();
-            $.ajax({
-                type: 'POST',
-                url: "{% url 'usuario:completar_cadastro_interesses' %}",
-                data: serializedData,
-                success: function (response) {
-                    const toast = document.getElementById('toast_interesses')
-                    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toast)
-                    toastBootstrap.show()
-                },
-                error: function (response) {
-                    // alert the error if any error occured
-                }
-            })
-        })
 
         function alterar_interesse(id_elemento) {
             var elemento = "btn_disc_"+id_elemento
