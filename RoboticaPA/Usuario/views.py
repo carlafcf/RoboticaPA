@@ -110,14 +110,19 @@ def completar_cadastro_usuario(request):
     return JsonResponse({"error": ""}, status=400)
 
 def completar_cadastro_interesses(request):
-    print(request.user.id)
+
     if request.method == "POST":
         usuario = Usuario.objects.get(pk=request.user.id)
-        usuario.first_name = request.POST['first_name']
-        usuario.last_name = request.POST['last_name']
-        usuario.cidade = request.POST['cidade']
-        usuario.estado = request.POST['estado']
-        usuario.save()
+        interesses_novos = request.POST.get('lista_interesses','').split(',')
+        interesses_anteriores = list(Interesses.objects.filter(usuario = Usuario.objects.get(id =request.user.pk)).values_list('disciplina', flat=True))
+        for interesse in interesses_novos:
+            if int(interesse) not in interesses_anteriores:
+                disciplina = Disciplina.objects.get(id = int(interesse))
+                usuario.interesses.add(disciplina)
+        for interesse in interesses_anteriores:
+            if str(interesse) not in interesses_novos:
+                disciplina = Disciplina.objects.get(pk=interesse)
+                Interesses.objects.get(usuario=usuario, disciplina=disciplina).delete()
         res = {'error': False, 'msg': "Successfully Submited."}
         return JsonResponse(res)
     if request.is_ajax and request.method == "POST":

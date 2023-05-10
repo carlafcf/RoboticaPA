@@ -19,6 +19,9 @@ class Interesses(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.RESTRICT, related_name='interesses_usuario', verbose_name="Usuário")
     disciplina = models.ForeignKey('Disciplina.Disciplina', on_delete=models.RESTRICT, verbose_name="Disciplina")
 
+    def __str__(self):
+        return str(self.usuario.first_name) + " " + self.disciplina.nome
+
     class Meta:
         ordering = ['usuario', 'disciplina']
         verbose_name = "Interesse"

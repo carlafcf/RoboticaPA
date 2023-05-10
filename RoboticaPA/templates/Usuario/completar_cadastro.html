@@ -54,8 +54,10 @@
                             <h5>Interesses</h5>
                         </div>
                         <div class="card-body">
-                            <!-- <form id="form_interesses" role="form" method="post"> -->
-                                <!-- {% csrf_token %}  -->
+                            <form id="form_interesses" role="form" method="post">
+                                {% csrf_token %} 
+
+                                <input type="hidden" id="lista_interesses" name="lista_interesses"></input>
                                 <!-- {% for checkbox in form_interesses %}
                                     <div class="checkbox">
                                         <label>
@@ -64,18 +66,18 @@
                                     </div>
                                 {% endfor %} -->
                                 {% for disciplina in disciplinas %}
-                                    <button onclick="alterar_interesse({{disciplina.id}})" style="background-color: transparent; border-color: transparent; box-shadow: none;">
+                                    <a onclick="alterar_interesse({{disciplina.id}})" style="background-color: transparent; border-color: transparent; box-shadow: none;">
                                         {% if disciplina.id in interesses %}
                                             <span id="btn_disc_{{disciplina.id}}" class="badge badge-sm bg-gradient-primary">{{ disciplina.nome }}</span>
                                         {% else %}
                                             <span id="btn_disc_{{disciplina.id}}" class="badge badge-sm bg-gradient-secondary">{{ disciplina.nome }}</span>
                                         {% endif %}
-                                    </button>
+                                    </a>
                                 {% endfor %}
                                 <div class="text-center">
                                     <button name="form_interesses" type="submit" class="btn bg-gradient-dark w-100 my-4 mb-2">Salvar</button>
                                 </div>
-                            <!-- </form> -->
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -115,6 +117,7 @@
         for (var i = 0; i < {{interesses}}.length; i++) {
             interesses_selecionados.push({{interesses}}[i])
         }
+        document.getElementById("lista_interesses").value = interesses_selecionados
 
         // document.addEventListener('DOMContentLoaded', function() {
         //     var interesses = '{{ interesses }}';
@@ -171,6 +174,7 @@
                 document.getElementById(elemento).classList.add('bg-gradient-secondary');
                 document.getElementById(elemento).classList.remove('bg-gradient-primary');
             }
+            document.getElementById("lista_interesses").value = interesses_selecionados
         }
     </script>
     {% endblock scripts %}
