@@ -142,7 +142,7 @@ def listar(request):
 
     inf_disciplinas = encontrar_planos_aula_disciplina(planos_aula, disciplinas)
 
-    encontrar_principais_conteudos(disciplinas)
+    # encontrar_principais_conteudos(disciplinas)
 
     informacoes = {
         'lista_planos_aula': planos_aula[:10],
