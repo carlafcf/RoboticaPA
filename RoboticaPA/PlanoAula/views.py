@@ -26,7 +26,9 @@ def home(request):
 
     inf_disciplinas = encontrar_planos_aula_disciplina(planos_aula, disciplinas)
     principais_conteudos = encontrar_principais_conteudos(likes_execucao_por_conteudo(planos_aula, conteudos), 5)
-    principais_planos_aula = encontrar_principais_planos_aula(planos_aula, 5)
+    principais_planos_aula = encontrar_principais_planos_aula(planos_aula, 6)
+
+    definir_principais_disciplinas(request.user.id)
 
     informacoes = {
         'lista_planos_aula': planos_aula[:10],
@@ -208,6 +210,48 @@ def encontrar_principais_planos_aula(planos_aula, quantidade):
     inf_planos_aula.sort(key = lambda x: x[1], reverse=True)
     
     return inf_planos_aula[0:quantidade]
+
+def definir_principais_disciplinas(usuario_id):
+    usuario = Usuario.objects.get(pk=usuario_id)
+
+    disciplinas_interesse = list(usuario.interesses.all())
+
+    planos_aula_favoritados = LikePlanoAula.objects.filter(usuario=usuario).values_list('plano_aula')
+    disciplinas = []
+    for plano_aula_id in planos_aula_favoritados:
+        plano_aula = PlanoAula.objects.get(id=plano_aula_id[0])
+
+        for item in list(plano_aula.conteudos.all()):
+            if item.disciplina not in disciplinas:
+                disciplinas.append(item.disciplina)
+    disciplinas_favoritadas = [x for x in disciplinas if x not in disciplinas_interesse]
+
+    planos_aula_executados = ExecucaoPlanoAula.objects.filter(usuario=usuario).values_list('plano_aula')
+    disciplinas = []
+    for plano_aula_id in planos_aula_executados:
+        plano_aula = PlanoAula.objects.get(id=plano_aula_id[0])
+
+        for item in list(plano_aula.conteudos.all()):
+            if item.disciplina not in disciplinas:
+                disciplinas.append(item.disciplina)
+    disciplinas_executadas = [x for x in disciplinas 
+                       if x not in disciplinas_interesse and
+                       x not in disciplinas_favoritadas]
+
+    disciplinas = list(Disciplina.objects.filter(status='Ativo'))
+    todas_disciplinas = [x for x in disciplinas 
+                         if x not in disciplinas_interesse and 
+                         x not in disciplinas_favoritadas and
+                         x not in disciplinas_executadas]
+
+    # print("Interesse:")
+    # print(disciplinas_interesse)
+    # print("Like")
+    # print(disciplinas_favoritadas)
+    # print("Executed")
+    # print(disciplinas_executadas)
+    # print("Todas")
+    # print(todas_disciplinas)
 
 def encontrar_principais_conteudos(inf_conteudos, quantidade):
     inf_conteudos.sort(key = lambda x: x[1], reverse=True)

@@ -55,7 +55,7 @@ class Cadastrar(generic.CreateView):
     template_name = 'Usuario/cadastrar.html'
     success_url = reverse_lazy('usuario:login')
 
-def completar_cadastro(request, pk):
+def completar_cadastro(request):
 
     disciplinas = Disciplina.objects.filter(status='Ativo')
 
@@ -64,7 +64,7 @@ def completar_cadastro(request, pk):
     if (request.method == "POST"):
         form_usuario = forms.FormCompletarCadastro(request.POST)
         if (form_usuario.is_valid()):
-            usuario = Usuario.objects.get(pk=pk)
+            usuario = Usuario.objects.get(pk=request.user.pk)
             usuario.first_name = form_usuario.cleaned_data['first_name']
             usuario.last_name = form_usuario.cleaned_data['last_name']
             usuario.cidade = form_usuario.cleaned_data['cidade']
