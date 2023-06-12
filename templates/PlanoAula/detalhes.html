@@ -63,9 +63,9 @@
                         <h6 class="mb-3 text-sm text-uppercase">Equipamento Usado</h6>
                         <span class="mb-2 text-xs">{{plano_aula.robo_equipamento|linebreaks}}</span>
                     </div>
-
+                    
                 </div>
-
+             
             </div>
             <br>
 
@@ -90,6 +90,7 @@
                         </li>
                         {% endif %}
 
+                        
                     </ul>
 
                 </div>
@@ -101,8 +102,11 @@
         <!--Sobre o projeto-->
         <div class="col-lg-8 col-md-0">
             <div class="card">
-                <div class="card-header home pb-0 p-3">
-                    <p class="text-sm mb-0 text-uppercase text-white font-weight-bold" class="text-center">{{plano_aula.titulo}}</p>
+                <div class="card-header home pb-2 p-3">
+                    <span class=" text-uppercase text-white font-weight-bold" class="text-center">{{plano_aula.titulo}}</span>       
+                    <button type="button" class="btn btn-sm float-end">    
+                        <span style="fontsize: 18px"><i class="fas fa-thumbs-up" style="color:var(--bs-white)"></i></span>
+                    </button>        
                 </div>
 
                 <div class="card-body pt-4 p-3">
@@ -276,3 +280,7 @@
 </script>
 
     {% endblock %}
+
+
+   
+        

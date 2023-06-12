@@ -20,4 +20,5 @@ urlpatterns = [
     path('mudar_status/<int:pk>', views.mudar_status, name='mudar_status'),
     path('mudar_status_admin/<int:pk>', views.mudar_status_admin, name='mudar_status_admin'),
     path('deletarUsuario/<int:pk>', views.DeletarUser.as_view(), name='deletar'),
+    path('perfil/<int:pk>', views.PerfilUsuario.as_view(), name='perfil'),
 ]
