@@ -241,6 +241,36 @@ class PlanoAulaTests(TestCase):
             [plano_aula_3]
         )
 
+    def test_sugestao_planos_aula(self):
+        usuario1 = Usuario.objects.get(first_name="Usuário 1")
+        usuario2 = Usuario.objects.get(first_name="Usuário 2")
+        usuario3 = Usuario.objects.get(first_name="Usuário 3")
+
+        plano_aula_1 = PlanoAula.objects.get(titulo="Plano de aula 1")
+        plano_aula_2 = PlanoAula.objects.get(titulo="Plano de aula 2")
+        plano_aula_3 = PlanoAula.objects.get(titulo="Plano de aula 3")
+        plano_aula_4 = PlanoAula.objects.get(titulo="Plano de aula 4")
+
+        self.assertEqual(
+            sc.sugestao_planos_aula(usuario1, 10),
+            [plano_aula_3, plano_aula_4]
+        )
+
+        self.assertEqual(
+            sc.sugestao_planos_aula(usuario2, 10),
+            [plano_aula_2, plano_aula_1]
+        )
+
+        self.assertEqual(
+            sc.sugestao_planos_aula(usuario2, 1),
+            [plano_aula_2]
+        )
+
+        self.assertEqual(
+            sc.sugestao_planos_aula(usuario3, 10),
+            [plano_aula_1, plano_aula_3, plano_aula_4, plano_aula_2]
+        )
+    
     # def test_encontrar_planos_aula_disciplina(self):
     #     planos_aula = PlanoAula.objects.all()
     #     disciplinas = list(Disciplina.objects.filter(status='Ativo'))

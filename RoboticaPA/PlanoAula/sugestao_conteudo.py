@@ -9,12 +9,11 @@ def sugestao_planos_aula(usuario, quantidade):
     # 2- Identifica os planos de aula que não foram executados pelo usuário
     # Encontra planos de aula das disciplinas de interesse
     # Ordena os planos de aula
-    disciplinas_interesse = disciplinas_interesse(usuario.id, [])
+    lista_disciplinas_interesse = disciplinas_interesse(usuario.id, [])
     lista = PlanoAula.objects.all().exclude(responsavel=usuario)
     executados = ExecucaoPlanoAula.objects.filter(usuario=usuario).values_list('plano_aula')
-    lista_pa_pre_requisitos = [x for x in lista and 
-                               x not in executados]
-    planos_aula_c1 = encontrar_planos_aula_por_disciplina(disciplinas_interesse, quantidade, lista_pa_pre_requisitos)
+    lista_pa_pre_requisitos = [x for x in lista if x not in executados]
+    planos_aula_c1 = encontrar_planos_aula_por_disciplina(lista_disciplinas_interesse, quantidade, lista_pa_pre_requisitos)
     planos_aula_c1 = ordenar(planos_aula_c1)
     planos_aula = planos_aula_c1
     
@@ -25,12 +24,12 @@ def sugestao_planos_aula(usuario, quantidade):
         # Identifica planos de aula que cumprem pré-requisitos mas que não foram analisados no C1
         # Encontra planos de aula das disciplinas favoritadas
         # Ordena os planos de aula
-        disciplinas_favoritadas = disciplinas_favoritadas(usuario.id, 
-                                                          disciplinas_interesse)
-        lista_criterio_2 = [x for x in lista_pa_pre_requisitos and 
+        lista_disciplinas_favoritadas = disciplinas_favoritadas(usuario.id, 
+                                                          lista_disciplinas_interesse)
+        lista_criterio_2 = [x for x in lista_pa_pre_requisitos if 
                             x not in planos_aula]
         planos_aula_c2 = encontrar_planos_aula_por_disciplina(
-            disciplinas_favoritadas, 
+            lista_disciplinas_favoritadas, 
             quantidade-len(planos_aula), 
             lista_criterio_2)
         planos_aula_c2 = ordenar(planos_aula_c2)
@@ -43,12 +42,12 @@ def sugestao_planos_aula(usuario, quantidade):
             # Identifica planos de aula que cumprem pré-requisitos mas que não foram analisados no C1 e C2
             # Encontra planos de aula das disciplinas executadas
             # Ordena os planos de aula
-            disciplinas_executadas = disciplinas_executadas(usuario.id, 
-                                                            disciplinas_interesse + disciplinas_favoritadas)
-            lista_criterio_3 = [x for x in lista_pa_pre_requisitos and 
+            lista_disciplinas_executadas = disciplinas_executadas(usuario.id, 
+                                                            lista_disciplinas_interesse + lista_disciplinas_favoritadas)
+            lista_criterio_3 = [x for x in lista_pa_pre_requisitos if 
                                 x not in planos_aula]
             planos_aula_c3 = encontrar_planos_aula_por_disciplina(
-                disciplinas_executadas, 
+                lista_disciplinas_executadas, 
                 quantidade-len(planos_aula), 
                 lista_criterio_3)
             planos_aula_c3 = ordenar(planos_aula_c3)
@@ -61,12 +60,11 @@ def sugestao_planos_aula(usuario, quantidade):
                 # Identifica planos de aula que cumprem pré-requisitos mas que não foram analisados no C1 e C2
                 # Encontra planos de aula das disciplinas executadas
                 # Ordena os planos de aula
-                todas_disciplinas = todas_disciplinas(usuario.id, 
-                                                                disciplinas_interesse + disciplinas_favoritadas + disciplinas_executadas)
-                lista_criterio_4 = [x for x in lista_pa_pre_requisitos and 
+                lista_todas_disciplinas = todas_disciplinas(lista_disciplinas_interesse + lista_disciplinas_favoritadas + lista_disciplinas_executadas)
+                lista_criterio_4 = [x for x in lista_pa_pre_requisitos if 
                                     x not in planos_aula]
                 planos_aula_c4 = encontrar_planos_aula_por_disciplina(
-                    todas_disciplinas, 
+                    lista_todas_disciplinas, 
                     quantidade-len(planos_aula), 
                     lista_criterio_4)
                 planos_aula_c4 = ordenar(planos_aula_c4)
