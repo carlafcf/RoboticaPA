@@ -64,6 +64,16 @@ class PlanoAulaTests(TestCase):
             prog_linguagem = "Python",
             prog_descricao = "nada a declarar"
         )
+        plano_aula_4 = PlanoAula.objects.create(
+            responsavel=usuario2,
+            titulo="Plano de aula 4",
+            contextualizacao = "Como vai ser",
+            descricao_atividade = "Como vai ser",
+            robo_equipamento = "Aqui",
+            robo_descricao = "Sim",
+            prog_linguagem = "Python",
+            prog_descricao = "nada a declarar"
+        )
 
         # Atribuindo conteúdos a planos de aula.
         # Conteúdo de Português não tem nenhum plano de aula associado a ele
@@ -76,6 +86,7 @@ class PlanoAulaTests(TestCase):
         plano_aula_3.conteudos.add(cont_hist_2)
         plano_aula_3.conteudos.add(cont_mat_1)
         plano_aula_3.conteudos.add(cont_mat_2)
+        plano_aula_4.conteudos.add(cont_mat_1)
 
         # Likes e execuções em planos de aula
 
@@ -87,6 +98,7 @@ class PlanoAulaTests(TestCase):
         # ExecucaoPlanoAula.objects.create(usuario=usuario2, plano_aula=plano_aula_2)
         # ExecucaoPlanoAula.objects.create(usuario=usuario2, plano_aula=plano_aula_3)
         ExecucaoPlanoAula.objects.create(usuario=usuario2, plano_aula=plano_aula_1)
+        ExecucaoPlanoAula.objects.create(usuario=usuario1, plano_aula=plano_aula_4)
     
     def test_disciplinas_interesse(self):
         usuario1 = Usuario.objects.get(first_name="Usuário 1")
@@ -178,6 +190,56 @@ class PlanoAulaTests(TestCase):
             [disciplina_historia, disciplina_matematica, disciplina_portugues]
         )
 
+    def test_ordenar(self):
+        plano_aula_1 = PlanoAula.objects.get(titulo="Plano de aula 1")
+        plano_aula_2 = PlanoAula.objects.get(titulo="Plano de aula 2")
+        plano_aula_3 = PlanoAula.objects.get(titulo="Plano de aula 3")
+        plano_aula_4 = PlanoAula.objects.get(titulo="Plano de aula 4")
+
+        self.assertEqual(
+            sc.ordenar([plano_aula_1, plano_aula_2, plano_aula_3, plano_aula_4]),
+            [plano_aula_1, plano_aula_3, plano_aula_4, plano_aula_2]
+        )
+
+        self.assertEqual(
+            sc.ordenar([plano_aula_1, plano_aula_2, plano_aula_4]),
+            [plano_aula_1, plano_aula_4, plano_aula_2]
+        )
+
+    def test_encontrar_planos_aula_por_disciplina(self):
+        disciplina_matematica = Disciplina.objects.get(nome="Matemática")
+        disciplina_portugues = Disciplina.objects.get(nome="Português")
+        disciplina_historia = Disciplina.objects.get(nome="História")
+
+        lista_disciplinas_1 = [disciplina_matematica, disciplina_portugues, disciplina_historia]
+        lista_disciplinas_2 = [disciplina_portugues, disciplina_historia]
+
+        plano_aula_1 = PlanoAula.objects.get(titulo="Plano de aula 1")
+        plano_aula_2 = PlanoAula.objects.get(titulo="Plano de aula 2")
+        plano_aula_3 = PlanoAula.objects.get(titulo="Plano de aula 3")
+        plano_aula_4 = PlanoAula.objects.get(titulo="Plano de aula 4")
+
+        lista_planos_aula = PlanoAula.objects.all()
+
+        self.assertEqual(
+            sc.encontrar_planos_aula_por_disciplina(lista_disciplinas_1, 5, lista_planos_aula),
+            [plano_aula_1, plano_aula_3, plano_aula_4, plano_aula_2]
+        )
+
+        self.assertEqual(
+            sc.encontrar_planos_aula_por_disciplina(lista_disciplinas_1, 3, lista_planos_aula),
+            [plano_aula_1, plano_aula_3, plano_aula_4]
+        )
+
+        self.assertEqual(
+            sc.encontrar_planos_aula_por_disciplina(lista_disciplinas_2, 5, lista_planos_aula),
+            [plano_aula_3, plano_aula_2]
+        )
+
+        self.assertEqual(
+            sc.encontrar_planos_aula_por_disciplina(lista_disciplinas_2, 1, lista_planos_aula),
+            [plano_aula_3]
+        )
 
     # def test_encontrar_planos_aula_disciplina(self):
     #     planos_aula = PlanoAula.objects.all()

@@ -83,15 +83,15 @@ def ordenar(lista_planos_aula):
     for plano_aula in lista_planos_aula:
         likes = list(LikePlanoAula.objects.filter(plano_aula=plano_aula).values_list('usuario', flat=True))
         execucoes = list(ExecucaoPlanoAula.objects.filter(plano_aula=plano_aula).values_list('usuario', flat=True))
-        
+
         quantidade_likes_execucoes = 0
         if (len(likes) > len(execucoes)):
             for item in execucoes:
-                if (len(LikePlanoAula.objects.filter(usuario=item.usuario, plano_aula=plano_aula))>0):
+                if (len(LikePlanoAula.objects.filter(usuario__id=item, plano_aula=plano_aula))>0):
                     quantidade_likes_execucoes += 1
         else:
             for item in likes:
-                if (len(ExecucaoPlanoAula.objects.filter(usuario=item.usuario, plano_aula=plano_aula))>0):
+                if (len(ExecucaoPlanoAula.objects.filter(usuario__id=item, plano_aula=plano_aula))>0):
                     quantidade_likes_execucoes += 1
         quantidade_likes = len(likes)
         quantidade_execucoes = len(execucoes)
@@ -100,12 +100,13 @@ def ordenar(lista_planos_aula):
     
     inf_planos_aula.sort(key = lambda x: (x[1], x[2], x[3]), reverse=True)
     lista_ordenada = [x[0] for x in inf_planos_aula]
+
     return lista_ordenada
 
 def encontrar_planos_aula_por_disciplina(lista_disciplinas, quantidade, lista_planos_aula):
     planos_aula_disciplina = []
     for plano_aula in lista_planos_aula:
-        for item in list(plano_aula.conteudos.all()):
+        for item in plano_aula.conteudos.all():
             if item.disciplina in lista_disciplinas and plano_aula not in planos_aula_disciplina:
                 planos_aula_disciplina.append(plano_aula)
     
