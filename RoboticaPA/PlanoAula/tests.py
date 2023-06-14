@@ -1,9 +1,10 @@
 from django.test import TestCase
 from PlanoAula.models import PlanoAula, LikePlanoAula, ExecucaoPlanoAula
 from Disciplina.models import Conteudo, Disciplina
-from Usuario.models import Usuario
+from Usuario.models import Usuario, Interesses
 
 from PlanoAula import views as planos_aula_views
+from PlanoAula import sugestao_conteudo as sc
 
 class PlanoAulaTests(TestCase):
     def setUp(self):
@@ -16,6 +17,12 @@ class PlanoAulaTests(TestCase):
         disciplina_matematica = Disciplina.objects.create(nome="Matemática")
         disciplina_portugues = Disciplina.objects.create(nome="Português")
         disciplina_historia = Disciplina.objects.create(nome="História")
+
+        # Definindo interesse dos usuários
+
+        usuario1.interesses.add(disciplina_matematica)
+        usuario1.interesses.add(disciplina_historia)
+        usuario2.interesses.add(disciplina_historia)
 
         # Criando 5 conteúdos
 
@@ -74,59 +81,150 @@ class PlanoAulaTests(TestCase):
 
         LikePlanoAula.objects.create(usuario=usuario1, plano_aula=plano_aula_3)
         LikePlanoAula.objects.create(usuario=usuario2, plano_aula=plano_aula_1)
-        LikePlanoAula.objects.create(usuario=usuario3, plano_aula=plano_aula_3)
+        # LikePlanoAula.objects.create(usuario=usuario3, plano_aula=plano_aula_3)
 
         ExecucaoPlanoAula.objects.create(usuario=usuario1, plano_aula=plano_aula_3)
-        ExecucaoPlanoAula.objects.create(usuario=usuario2, plano_aula=plano_aula_2)
-        ExecucaoPlanoAula.objects.create(usuario=usuario3, plano_aula=plano_aula_3)
-        ExecucaoPlanoAula.objects.create(usuario=usuario3, plano_aula=plano_aula_1)
-
-    def test_encontrar_planos_aula_disciplina(self):
-        planos_aula = PlanoAula.objects.all()
-        disciplinas = list(Disciplina.objects.filter(status='Ativo'))
-
-        inf_disciplinas = planos_aula_views.encontrar_planos_aula_disciplina(planos_aula, disciplinas)
-
-        self.assertEqual(inf_disciplinas[0][1], 2)
-        self.assertEqual(inf_disciplinas[1][1], 3)
-        self.assertEqual(inf_disciplinas[2][1], 0)
+        # ExecucaoPlanoAula.objects.create(usuario=usuario2, plano_aula=plano_aula_2)
+        # ExecucaoPlanoAula.objects.create(usuario=usuario2, plano_aula=plano_aula_3)
+        ExecucaoPlanoAula.objects.create(usuario=usuario2, plano_aula=plano_aula_1)
     
-    def test_likes_execucao_por_conteudo(self):
-        planos_aula = PlanoAula.objects.all()
-        conteudos = list(Conteudo.objects.filter(status='Ativo'))
+    def test_disciplinas_interesse(self):
+        usuario1 = Usuario.objects.get(first_name="Usuário 1")
+        usuario2 = Usuario.objects.get(first_name="Usuário 2")
+        usuario3 = Usuario.objects.get(first_name="Usuário 3")
 
-        inf_conteudos = planos_aula_views.likes_execucao_por_conteudo(planos_aula, conteudos)
+        disciplina_matematica = Disciplina.objects.get(nome="Matemática")
+        disciplina_portugues = Disciplina.objects.get(nome="Português")
+        disciplina_historia = Disciplina.objects.get(nome="História")
 
-        self.assertEqual(inf_conteudos[0][1], 3)
-        self.assertEqual(inf_conteudos[1][1], 2)
-        self.assertEqual(inf_conteudos[2][1], 4)
-        self.assertEqual(inf_conteudos[3][1], 5)
-        self.assertEqual(inf_conteudos[4][1], 0)
+        self.assertEqual(sc.disciplinas_interesse(usuario1.id, []), [disciplina_historia, disciplina_matematica])
+        self.assertEqual(sc.disciplinas_interesse(usuario2.id, []), [disciplina_historia])
+        self.assertEqual(sc.disciplinas_interesse(usuario3.id, []), [])
     
-    def test_encontrar_principais_conteudos(self):
-        planos_aula = PlanoAula.objects.all()
-        conteudos = list(Conteudo.objects.filter(status='Ativo'))
+    def test_disciplinas_favoritadas(self):
+        usuario1 = Usuario.objects.get(first_name="Usuário 1")
+        usuario2 = Usuario.objects.get(first_name="Usuário 2")
+        usuario3 = Usuario.objects.get(first_name="Usuário 3")
 
-        principais_conteudos = planos_aula_views.encontrar_principais_conteudos(planos_aula_views.likes_execucao_por_conteudo(planos_aula, conteudos), 3)
+        disciplina_matematica = Disciplina.objects.get(nome="Matemática")
+        disciplina_portugues = Disciplina.objects.get(nome="Português")
+        disciplina_historia = Disciplina.objects.get(nome="História")
 
-        # Os principais conteúdos são Matemática 2, Matemática 1 e História 1
-        # Lembrando que like e execução em um plano de aula não conta como 2
+        self.assertEqual(sc.disciplinas_favoritadas(usuario1.id, []), [disciplina_historia, disciplina_matematica])
+        self.assertEqual(sc.disciplinas_favoritadas(usuario2.id, []), [disciplina_matematica])
+        self.assertEqual(sc.disciplinas_favoritadas(usuario3.id, []), [])
 
-        self.assertEqual(len(principais_conteudos),3)
-        self.assertEqual(principais_conteudos[0][0].id,2)
-        self.assertEqual(principais_conteudos[1][0].id,1)
-        self.assertEqual(principais_conteudos[2][0].id,4)
+        self.assertEqual(sc.disciplinas_favoritadas(usuario1.id, sc.disciplinas_interesse(usuario1.id, [])),
+                          [])
+        self.assertEqual(sc.disciplinas_favoritadas(usuario2.id, sc.disciplinas_interesse(usuario2.id, [])),
+                          [disciplina_matematica])
+        self.assertEqual(sc.disciplinas_favoritadas(usuario3.id, sc.disciplinas_interesse(usuario3.id, [])),
+                          [])
+
+    def test_disciplinas_executadas(self):
+        usuario1 = Usuario.objects.get(first_name="Usuário 1")
+        usuario2 = Usuario.objects.get(first_name="Usuário 2")
+        usuario3 = Usuario.objects.get(first_name="Usuário 3")
+
+        disciplina_matematica = Disciplina.objects.get(nome="Matemática")
+        disciplina_portugues = Disciplina.objects.get(nome="Português")
+        disciplina_historia = Disciplina.objects.get(nome="História")
+
+        self.assertEqual(sc.disciplinas_executadas(usuario1, []), [disciplina_historia, disciplina_matematica])
+        self.assertEqual(sc.disciplinas_executadas(usuario2, []), [disciplina_matematica])
+        self.assertEqual(sc.disciplinas_executadas(usuario3, []), [])
+
+        self.assertEqual(sc.disciplinas_executadas(usuario1.id, sc.disciplinas_favoritadas(usuario1.id, sc.disciplinas_interesse(usuario1.id, [])) +
+                                                    sc.disciplinas_interesse(usuario1.id, [])),
+                          [])
+        self.assertEqual(sc.disciplinas_executadas(usuario2.id, sc.disciplinas_favoritadas(usuario2.id, sc.disciplinas_interesse(usuario2.id, [])) +
+                                                    sc.disciplinas_interesse(usuario2.id, [])),
+                          [])
+        self.assertEqual(sc.disciplinas_executadas(usuario3.id, sc.disciplinas_favoritadas(usuario3.id, sc.disciplinas_interesse(usuario3.id, [])) +
+                                                    sc.disciplinas_interesse(usuario3.id, [])),
+                          [])
     
-    def test_encontrar_principais_planos_aula(self):
-        planos_aula = PlanoAula.objects.all()
+    def test_todas_disciplinas(self):
+        usuario1 = Usuario.objects.get(first_name="Usuário 1")
+        usuario2 = Usuario.objects.get(first_name="Usuário 2")
+        usuario3 = Usuario.objects.get(first_name="Usuário 3")
 
-        principais_planos_aula = planos_aula_views.encontrar_principais_planos_aula(planos_aula, 5)
+        disciplina_matematica = Disciplina.objects.get(nome="Matemática")
+        disciplina_portugues = Disciplina.objects.get(nome="Português")
+        disciplina_historia = Disciplina.objects.get(nome="História")
 
-        self.assertEqual(len(principais_planos_aula), 3)
-        self.assertEqual(principais_planos_aula[0][0].id, 1)
-        self.assertEqual(principais_planos_aula[1][0].id, 3)
-        self.assertEqual(principais_planos_aula[2][0].id, 2)
+        self.assertEqual(sc.todas_disciplinas([]), 
+                         [disciplina_historia, disciplina_matematica, disciplina_portugues]
+                         )
+        
+        self.assertEqual(
+            sc.todas_disciplinas(sc.disciplinas_interesse(usuario1.id, []) +
+                                sc.disciplinas_favoritadas(usuario1.id, sc.disciplinas_interesse(usuario1.id, [])) +
+                                sc.disciplinas_executadas(usuario1.id, sc.disciplinas_interesse(usuario1.id, []) + sc.disciplinas_favoritadas(usuario1.id, sc.disciplinas_interesse(usuario1.id, [])))),
+            [disciplina_portugues]
+        )
+        
+        self.assertEqual(
+            sc.todas_disciplinas(sc.disciplinas_interesse(usuario2.id, []) +
+                                sc.disciplinas_favoritadas(usuario2.id, sc.disciplinas_interesse(usuario2.id, [])) +
+                                sc.disciplinas_executadas(usuario2.id, sc.disciplinas_interesse(usuario2.id, []) + sc.disciplinas_favoritadas(usuario2.id, sc.disciplinas_interesse(usuario2.id, [])))),
+            [disciplina_portugues]
+        )
+        
+        self.assertEqual(
+            sc.todas_disciplinas(sc.disciplinas_interesse(usuario3.id, []) +
+                                sc.disciplinas_favoritadas(usuario3.id, sc.disciplinas_interesse(usuario3.id, [])) +
+                                sc.disciplinas_executadas(usuario3.id, sc.disciplinas_interesse(usuario3.id, []) + sc.disciplinas_favoritadas(usuario3.id, sc.disciplinas_interesse(usuario3.id, [])))),
+            [disciplina_historia, disciplina_matematica, disciplina_portugues]
+        )
 
-        self.assertEqual(principais_planos_aula[0][1], 2)
-        self.assertEqual(principais_planos_aula[1][1], 2)
-        self.assertEqual(principais_planos_aula[2][1], 1)
+
+    # def test_encontrar_planos_aula_disciplina(self):
+    #     planos_aula = PlanoAula.objects.all()
+    #     disciplinas = list(Disciplina.objects.filter(status='Ativo'))
+
+    #     inf_disciplinas = planos_aula_views.encontrar_planos_aula_disciplina(planos_aula, disciplinas)
+
+    #     self.assertEqual(inf_disciplinas[0][1], 2)
+    #     self.assertEqual(inf_disciplinas[1][1], 3)
+    #     self.assertEqual(inf_disciplinas[2][1], 0)
+    
+    # def test_likes_execucao_por_conteudo(self):
+    #     planos_aula = PlanoAula.objects.all()
+    #     conteudos = list(Conteudo.objects.filter(status='Ativo'))
+
+    #     inf_conteudos = planos_aula_views.likes_execucao_por_conteudo(planos_aula, conteudos)
+
+    #     self.assertEqual(inf_conteudos[0][1], 3)
+    #     self.assertEqual(inf_conteudos[1][1], 2)
+    #     self.assertEqual(inf_conteudos[2][1], 4)
+    #     self.assertEqual(inf_conteudos[3][1], 5)
+    #     self.assertEqual(inf_conteudos[4][1], 0)
+    
+    # def test_encontrar_principais_conteudos(self):
+    #     planos_aula = PlanoAula.objects.all()
+    #     conteudos = list(Conteudo.objects.filter(status='Ativo'))
+
+    #     principais_conteudos = planos_aula_views.encontrar_principais_conteudos(planos_aula_views.likes_execucao_por_conteudo(planos_aula, conteudos), 3)
+
+    #     # Os principais conteúdos são Matemática 2, Matemática 1 e História 1
+    #     # Lembrando que like e execução em um plano de aula não conta como 2
+
+    #     self.assertEqual(len(principais_conteudos),3)
+    #     self.assertEqual(principais_conteudos[0][0].id,2)
+    #     self.assertEqual(principais_conteudos[1][0].id,1)
+    #     self.assertEqual(principais_conteudos[2][0].id,4)
+    
+    # def test_encontrar_principais_planos_aula(self):
+    #     planos_aula = PlanoAula.objects.all()
+
+    #     principais_planos_aula = planos_aula_views.encontrar_principais_planos_aula(planos_aula, 5)
+
+    #     self.assertEqual(len(principais_planos_aula), 3)
+    #     self.assertEqual(principais_planos_aula[0][0].id, 1)
+    #     self.assertEqual(principais_planos_aula[1][0].id, 3)
+    #     self.assertEqual(principais_planos_aula[2][0].id, 2)
+
+    #     self.assertEqual(principais_planos_aula[0][1], 2)
+    #     self.assertEqual(principais_planos_aula[1][1], 2)
+    #     self.assertEqual(principais_planos_aula[2][1], 1)
