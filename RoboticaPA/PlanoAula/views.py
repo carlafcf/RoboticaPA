@@ -9,10 +9,11 @@ import datetime
 
 from django.urls import reverse_lazy
 from django.views import generic
+from django_filters.views import BaseFilterView, FilterView
 from Disciplina.models import Disciplina, Conteudo
 from PlanoAula.models import PlanoAula, LikePlanoAula, ExecucaoPlanoAula
 from Usuario.models import Usuario
-from PlanoAula import forms
+from PlanoAula import forms, filters
 
 @login_required
 def home(request):
@@ -153,6 +154,42 @@ def listar(request):
     }
 
     return render(request, "PlanoAula/listar.html", informacoes)
+
+@login_required
+def listar_todos(request):
+    planos_aula = PlanoAula.objects.all()
+
+    informacoes = {
+        'lista_planos_aula': planos_aula
+    }
+
+    return render(request, "PlanoAula/listar.html", informacoes)
+
+class ListarPlanosAulaFiltrados(generic.ListView):
+    model = PlanoAula
+    template_name = 'PlanoAula/listar.html'
+    context_object_name = 'lista_planos_aula'
+    paginate_by = 15
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.all())
+        qs_filtrada = planos_aula_filtrado.qs
+        return qs_filtrada
+
+    def get_context_data(self,**kwargs):
+        context = super(ListarPlanosAulaFiltrados,self).get_context_data(**kwargs)
+        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.all())
+        context['planos_aula_filtrado'] = planos_aula_filtrado.qs
+        context['form_filtro'] = planos_aula_filtrado.form
+        return context
+
+class ListarPlanosAula(FilterView):
+    model = PlanoAula
+    template_name = 'PlanoAula/listar.html'
+    context_object_name = 'lista_planos_aula'
+    paginate_by = 3
+    filterset_class = filters.PlanoAulaFiltro
 
 def encontrar_planos_aula_disciplina(planos_aula, disciplinas):
 
