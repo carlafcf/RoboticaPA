@@ -27,6 +27,7 @@ urlpatterns = [
     path('plano_aula/', include('PlanoAula.urls')),
     path('usuario/', include('Usuario.urls')),
     path('disciplina/', include('Disciplina.urls')),
+    path('curso/', include('Curso.urls')),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
