@@ -1,8 +1,0 @@
-Redirect to previous page:
-
-View:
-def get_success_url(self):
-        return self.request.GET.get('next', None)
-
-Template:
-href="{% url 'usuario:editar' pk=user.pk %}?next={{ request.path|urlencode }}"
