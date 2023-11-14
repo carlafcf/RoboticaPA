@@ -17,4 +17,6 @@ urlpatterns = [
     path('listar/', views.ListarPlanosAulaFiltrados.as_view(), name='listar'),
     path('programacao/<int:pk>/', views.Programacao.as_view(), name='programacao'),
 
+    path('marcar-favorito/<int:plano_aula>/<int:usuario>/', views.marcar_favorito, name="marcar_favorito"),
+    path('marcar-executado/<int:plano_aula>/<int:usuario>/', views.marcar_executado, name="marcar_executado"),
 ]

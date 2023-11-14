@@ -3,6 +3,7 @@
 
 {% load pagination_tags %}
 {% load widget_tweaks %}
+{% load static %}
 
 {% block breadcrumb1 %}
 Plano de aula
@@ -19,10 +20,10 @@ Planos de aula de robótica
 {% block conteudo %}
 <br>
 <div class="row">
-    <div class="col-sm-12 col-md-5 col-lg-3">
+    <div class="col-md-4 col-lg-4">
         <div class="card border-primary"> <!--Por borda-->
-            <div class="card-header pb-0 p-3">
-                FILTROS
+            <div class="card-header pb-0 p-3 bg-gradient-warning">
+                <p class="text-sm mb-0 text-uppercase text-white font-weight-bold">Filtros</p>
             </div>
             <div class="card-body p-3 overflow-auto">
                 <div class="form-group">
@@ -43,6 +44,11 @@ Planos de aula de robótica
                         </div>
                         <br>
                         <div class="input-group">
+                            <span class="input-group-text text-body">Disciplinas</span>
+                            {{form_filtro.conteudos__disciplina|add_class:"form-control"}}
+                        </div>
+                        <br>
+                        <div class="input-group">
                             <span class="input-group-text text-body">Conteúdos</span>
                             {{form_filtro.conteudos|add_class:"form-control"}}
                         </div>
@@ -58,28 +64,45 @@ Planos de aula de robótica
                         </div>
                         <br>
                         <input type="submit" class="btn btn-success" value="Filtrar">
+                        <div class="float-end">
+                            <a href="{% url 'plano_aula:listar' %}"><span class="text-sm mb-0 font-weight-bold px-3">Limpar</span></a>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-sm-12 col-md-7 col-lg-9">
+    <div class="col-md-8 col-lg-8">
         {% for aula in lista_planos_aula %}
-            <div class="card">
-                <div class="card-header pb-0 p-3">
-                    <a href="{% url 'plano_aula:detalhes' pk=aula.id %}">{{aula}}</a>
-                    <div class="float-end">
-                        <i class="fas fa-thumbs-up" style="color:var(--bs-blue)"></i>
-                        {{ aula.likes.count }}
-                        <i class="fas fa-play" style="color:var(--bs-teal)"></i>
-                        {{ aula.execucoes.count }}
+            <a href="{% url 'plano_aula:detalhes' pk=aula.pk %}">
+                <div class="card">
+                    <div class="card-header bg-gradient-primary pb-0 p-3">
+                        <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">{{aula.titulo}}</span>
+                        <div class="float-end">
+                            <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3"><i class="fas fa-thumbs-up text-white px-3"></i>{{ aula.likes.count }}</span>
+                            <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3"><i class="fas fa-play text-white px-3"></i>{{ aula.execucoes.count }}</span>
+                        </div>
+                    </div>
+                    <div class="card-body row">
+                        <div class="col-4">
+                            <img src="{% static 'assets/img/carousel-2.jpg' %}" alt="" class="img-fluid">
+                            {% for conteudo in aula.conteudos.all %} 
+                                <span class="mb-2 text-xs">{{conteudo.disciplina}}: 
+                                    <span class="text-dark font-weight-bold ms-sm-2">{{conteudo.nome}}</span>
+                                </span>
+                                <br>
+                            {% endfor %}
+                        </div>
+                        <div class="col-8">
+                            <div class="overflow-auto">
+                                <i class="ni education_hat mr-2"></i>{{ aula.descricao_atividade|slice:":600" }}...
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
-                <div class="card-body p-3 overflow-auto">
-                    
-                </div>
-            </div>
-            <br/>
+            </a>
+            <br>
             
         {% empty %}
             <div class="card">
@@ -87,6 +110,7 @@ Planos de aula de robótica
                     <p>Não foram encontrados planos de aula com esses parâmetros.</p>
                 </div>
             </div>
+            <br>
         {% endfor %}
         <nav class="justify-content-center d-flex pagination">
             <ul class="pagination">

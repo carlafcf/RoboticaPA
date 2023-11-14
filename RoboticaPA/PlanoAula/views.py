@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.http import HttpResponse 
+import json
+from django.http import JsonResponse
 import datetime
 
 from django.urls import reverse_lazy
@@ -285,3 +287,33 @@ class Programacao(generic.DetailView):
    template_name = "PlanoAula/programacao.html"
    context_object_name = "plano_aula"
 
+def marcar_favorito(request, plano_aula, usuario):
+    plano_aula_obj = PlanoAula.objects.get(id=plano_aula)
+    usuario_obj = Usuario.objects.get(id=usuario)
+    like = LikePlanoAula.objects.filter(plano_aula__id = plano_aula, usuario__id = usuario)
+    if len(like) == 0:
+        LikePlanoAula.objects.create(plano_aula = plano_aula_obj, usuario = usuario_obj)
+        return finalizar_requisicao_api(1)
+    else:
+        like[0].delete()
+        return finalizar_requisicao_api(0)
+
+
+def marcar_executado(request, plano_aula, usuario):
+    plano_aula_obj = PlanoAula.objects.get(id=plano_aula)
+    usuario_obj = Usuario.objects.get(id=usuario)
+    execucao = ExecucaoPlanoAula.objects.filter(plano_aula__id = plano_aula, usuario__id = usuario)
+    if len(execucao) == 0:
+        ExecucaoPlanoAula.objects.create(plano_aula = plano_aula_obj, usuario = usuario_obj)
+        return finalizar_requisicao_api(1)
+    else:
+        execucao[0].delete()
+        return finalizar_requisicao_api(0)
+
+def finalizar_requisicao_api(response_data):
+    response_data = response_data
+
+    return HttpResponse(
+        json.dumps(response_data),
+        content_type="application/json"
+    )

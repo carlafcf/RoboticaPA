@@ -50,6 +50,9 @@ class LikePlanoAula(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.RESTRICT,null=True, verbose_name="Usuário")
     plano_aula = models.ForeignKey(PlanoAula, related_name='likes', on_delete=models.RESTRICT,null=True, verbose_name="Plano de aula")
 
+    def __str__(self):
+        return str(self.usuario.first_name) + " - " + str(self.plano_aula.titulo)
+
     class Meta:
         ordering = ['usuario']
         verbose_name = "Like"
@@ -58,6 +61,9 @@ class LikePlanoAula(models.Model):
 class ExecucaoPlanoAula(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.RESTRICT,null=True, verbose_name="Usuário")
     plano_aula = models.ForeignKey(PlanoAula, related_name='execucoes', on_delete=models.RESTRICT,null=True, verbose_name="Plano de aula")
+
+    def __str__(self):
+        return str(self.usuario.first_name) + " - " + str(self.plano_aula.titulo)
 
     class Meta:
         ordering = ['usuario']

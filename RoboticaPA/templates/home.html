@@ -1,172 +1,139 @@
     {% extends "Base/base.html" %}
-    {% load static %} 
-    
-    {% block breadcrumb1 %} 
-    Plano de aula
-    {% endblock %} 
-    
-    {% block breadcrumb2 %} 
-    Listar 
-    {% endblock %} 
-    
-    {% block titulo %} 
-    Bem vindo ao Repo-Educ!
-    {% endblock %} 
+    {% load static %}
+    {% load attribute_tags %}
     
     {% block conteudo %}
-    <br>  
-
-        <div class="row">
-            <div class="col-lg-4 col-md-4">
-                <div class="card">
-                    <div class="card-header home pb-0 p-3">
-                        <p class="text-sm mb-0 text-uppercase text-white font-weight-bold">Info</p>
-                    </div>
-                    <div class="card-body p-3 overflow-auto" style="height:300px">
-
-                    </div>
+    <br> 
+    
+    <div class="row">
+        <div class="col-lg-4 col-md-4">
+            <div class="card">
+                <div class="card-header pb-0 p-3 bg-gradient-warning">
+                    <p class="text-sm mb-0 text-uppercase text-white font-weight-bold">Conteúdos populares</p>
+                </div>
+                <div class="card-body p-3 overflow-auto">
+                    <ul class="list-group">
+                        {% for conteudo in principais_conteudos %}
+                        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                            <div class="d-flex align-items-center">
+                                <div class="icon icon-shape icon-sm me-3 bg-gradient-warning shadow text-center">
+                                    <p class="text-white font-weight-bold">{{ forloop.counter }}</p>
+                                    <!-- <i class="ni ni-mobile-button text-white opacity-10"></i> -->
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-1 text-dark text-sm">{{ conteudo.0.nome }}</h6>
+                                    <span class="text-xs">{{ conteudo.0.disciplina }}</span>
+                                </div>
+                            </div>
+                            <div class="d-flex">
+                                <a href="{% url 'plano_aula:listar' %}?conteudos={{conteudo.0.id}}"><i class="fa fa-chevron-right"></i></a>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4">
-                <div class="card">
-                    <div class="card-header home pb-0 p-3">
-                        <p class="text-sm mb-0 text-uppercase text-white font-weight-bold">Disciplinas</p>
-                    </div>
-                    <div class="card-body p-3 overflow-auto" style="height:300px">
-                        <ul class="list-group">
-                            {% for disciplina in inf_disciplinas %}
-                            <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                                <div class="d-flex align-items-center">
-                                    <div class="icon icon-shape icon-sm me-3 bg-gradient-primary shadow text-center">
-                                        <p class="text-white font-weight-bold opacity-10">{{ forloop.counter }}</p>
-                                        <!-- <i class="ni ni-mobile-button text-white opacity-10"></i> -->
-                                    </div>
-                                    <div class="d-flex flex-column">
-                                        <h6 class="mb-1 text-dark text-sm">{{ disciplina.0 }}</h6>
-                                        <span class="text-xs">{{ disciplina.1 }} <span class="font-weight-bold">
-                                        {% if disciplina.1 == 1 %}
-                                            aula</span></span>
-                                        {% else %} aulas </span>
-                                        </span>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <div class="d-flex">
-                                    <button class="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto"><i class="ni ni-bold-right" aria-hidden="true"></i></button>
-                                </div>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
+            <br>
+            <div class="card">
+                <div class="card-header home pb-0 p-3 bg-gradient-success">
+                    <p class="text-sm mb-0 text-uppercase text-white font-weight-bold">Disciplinas</p>
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-4">
-                <div class="card">
-                    <div class="card-header home pb-0 p-3">
-                        <p class="text-sm mb-0 text-uppercase text-white font-weight-bold">Conteúdos populares</p>
-                    </div>
-                    <div class="card-body p-3 overflow-auto" style="height:300px">
-                        <ul class="list-group">
-                            {% for conteudo in principais_conteudos %}
-                            <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                                <div class="d-flex align-items-center">
-                                    <div class="icon icon-shape icon-sm me-3 bg-gradient-primary shadow text-center">
-                                        <p class="text-white font-weight-bold">{{ forloop.counter }}</p>
-                                        <!-- <i class="ni ni-mobile-button text-white opacity-10"></i> -->
-                                    </div>
-                                    <div class="d-flex flex-column">
-                                        <h6 class="mb-1 text-dark text-sm">{{ conteudo.0.nome }}</h6>
-                                        <span class="text-xs">{{ conteudo.0.disciplina }}</span>
-                                    </div>
+                <div class="card-body p-3 overflow-auto" style="height:600px">
+                    <ul class="list-group">
+                        {% for disciplina in inf_disciplinas %}
+                        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                            <div class="d-flex align-items-center">
+                                <div class="icon icon-shape icon-sm me-3 bg-gradient-success shadow text-center">
+                                    <p class="text-white font-weight-bold opacity-10">{{ forloop.counter }}</p>
+                                    <!-- <i class="ni ni-mobile-button text-white opacity-10"></i> -->
                                 </div>
-                                <div class="d-flex">
-                                    <button class="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto"><i class="ni ni-bold-right" aria-hidden="true"></i></button>
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-1 text-dark text-sm">{{ disciplina.0 }}</h6>
+                                    <span class="text-xs">{{ disciplina.1 }} <span class="font-weight-bold">
+                                    {% if disciplina.1 == 1 %}
+                                        aula</span></span>
+                                    {% else %} aulas </span>
+                                    </span>
+                                    {% endif %}
                                 </div>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
+                            </div>
+                            <div class="d-flex">
+                                <a href="{% url 'plano_aula:listar' %}?conteudos__disciplina={{disciplina.0.id}}"><i class="fa fa-chevron-right"></i></a>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>
-    <div id="div_home_inicial">
-        <br> {% for plano_aula in principais_planos_aula %} {% if forloop.counter|divisibleby:4 == True or forloop.counter == 1 %}
-        <div class="row">
-            {% endif %}
-            <div class="col-md-4">
-                <!-- <a href=""> -->
-                <div class="card card-profile">
-                    <a href="{% url 'plano_aula:detalhes' pk=plano_aula.0.id %}">
-                        <img src="{% static 'assets/img/carousel-1.jpg' %}" alt="Image placeholder" class="card-img-top">
-                        <div class="row justify-content-center">
-                            <div class="col-4 col-lg-4 order-lg-2">
-                                <div class="mt-n4 mt-lg-n6 mb-4 mb-lg-0">
-                                    <img src="{% static 'assets/img/robo_icone.png' %}" class="rounded-circle img-fluid border border-2 border-white">
-                                </div>
-                            </div>
+        <div class="col-lg-8 col-md-8">
+            <p class="text-uppercase font-weight-bold">Planos de aula</p>
+            {% for plano_aula in principais_planos_aula %}
+                <div class="card">
+                    <div class="card-header bg-gradient-primary pb-0 p-3">
+                        <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">{{plano_aula.0.titulo}}</span>
+                        <div class="float-end">
+                            <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">
+                                {% if plano_aula.0.likes.all|encontrar_usuario_lista:user.id %}
+                                    <a onclick="marcar_favorito({{plano_aula.0.id}}, {{user.id}})">
+                                        <i class="fas fa-thumbs-up px-3" id="icon_thumbs_up_{{plano_aula.0.id}}"
+                                        style="color: var(--bs-success);
+                                                -webkit-text-stroke: 1px white;"></i>
+                                    </a>
+                                {% else %}
+                                    <a onclick="marcar_favorito({{plano_aula.0.id}}, {{user.id}})">
+                                        <i class="fas fa-thumbs-up px-3" id="icon_thumbs_up_{{plano_aula.0.id}}"
+                                        style="color: white;"></i>
+                                    </a>
+                                {% endif %}
+                                <span id="contador_thumbs_up_{{plano_aula.0.id}}">{{ plano_aula.0.likes.count }}</span>
+                            </span>
+                            <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">
+                                {% if plano_aula.0.execucoes.all|encontrar_usuario_lista:user.id %}
+                                    <a onclick="marcar_executado({{plano_aula.0.id}}, {{user.id}})">
+                                        <i class="fas fa-play px-3" id="icon_play_{{plano_aula.0.id}}"
+                                        style="color: var(--bs-success);
+                                                -webkit-text-stroke: 1px white;"></i>
+                                    </a>
+                                {% else %}
+                                    <a onclick="marcar_executado({{plano_aula.0.id}}, {{user.id}})">
+                                        <i class="fas fa-play px-3" id="icon_play_{{plano_aula.0.id}}"
+                                        style="color: white;"></i>
+                                    </a>
+                                {% endif %}
+                                <span id="contador_play_{{plano_aula.0.id}}">{{ plano_aula.0.execucoes.count }}</span>
+                            </span>
                         </div>
-                    </a>
-                    <a href="{% url 'plano_aula:detalhes' pk=plano_aula.0.id %}">
-                        <div class="card-body pt-0">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="d-flex justify-content-center">
-                                        <div class="d-grid text-center mx-4">
-                                            <span class="text-lg font-weight-bolder">{{ plano_aula.0.likes.count }}</span>
-                                            <span class="text-sm opacity-8">Likes</span>
-                                        </div>
-                                        <div class="d-grid text-center mx-4">
-                                            <span class="text-lg font-weight-bolder">{{ plano_aula.0.execucoes.count }}</span>
-                                            <span class="text-sm opacity-8">Execuções</span>
-                                        </div>
-                                        <div class="d-grid text-center mx-4">
-                                            <span class="text-lg font-weight-bolder">***</span>
-                                            <span class="text-sm opacity-8">Mídias</span>
-                                        </div>
-                                    </div>
+                    </div>
+                    <a href="{% url 'plano_aula:detalhes' pk=plano_aula.0.pk %}">
+                        <div class="card-body row">
+                            <div class="col-4">
+                                <img src="{% static 'assets/img/carousel-2.jpg' %}" alt="" class="img-fluid">
+                                {% for conteudo in plano_aula.0.conteudos.all %} 
+                                    <span class="mb-2 text-xs">{{conteudo.disciplina}}: 
+                                        <span class="text-dark font-weight-bold ms-sm-2">{{conteudo.nome}}</span>
+                                    </span>
+                                    <br>
+                                {% endfor %}
+                            </div>
+                            <div class="col-8">
+                                <div class="overflow-auto">
+                                    <i class="ni education_hat mr-2"></i>{{ plano_aula.0.descricao_atividade|slice:":600" }}...
                                 </div>
                             </div>
-                            <div class="text-center mt-4">
-                                <h5>
-                                    {{ plano_aula.0.titulo }}
-                                </h5>
-                                <div class="h6 font-weight-300">
-                                    {% for conteudo in plano_aula.0.conteudos.all %} {{ conteudo.nome }}, {{ conteudo.disciplina }} {% endfor %}
-                                </div>
-                                <div class="overflow-auto" style="height:200px">
-                                    <i class="ni education_hat mr-2"></i>{{ plano_aula.0.descricao_atividade|linebreaks }}
-                                </div>
-                            </div>
+                            
                         </div>
                     </a>
                 </div>
-                <!-- </a> -->
-            </div>
-
-            {% if forloop.counter|divisibleby:3 %}
+                <br>
+            {% endfor %}
+            <a href="">Ver todos</a>
         </div>
-        <br> {% endif %} {% endfor %}
-        <a class="text-center" href="">Ver Todos</a>
-    </div>
-
-    <!--Inicio da segunda-->
-    <div id="div_home_completa" style="display: none">
-       <p> entrei </p>
-       
     </div>
 
     {% endblock %}
 
     {% block scripts %}
-
-    <script>
-
-        function mostrar_tudo() {
-            
-            document.getElementById("div_home_inicial").style.display = 'none';
-            document.getElementById("div_home_completa").style.display = 'block';
-        }
-
-    </script>
+    <script src="{% static 'assets/js/custom/marcar_favorito_executado.js' %}"></script>
 
     {% endblock %}
