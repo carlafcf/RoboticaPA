@@ -10,7 +10,7 @@ def user_directory_path(instance, filename):
 
 class PlanoAula(models.Model):
 
-    responsavel = models.ForeignKey(Usuario, on_delete=models.RESTRICT,null=True, verbose_name="Responsável")
+    criador = models.ForeignKey(Usuario, on_delete=models.RESTRICT,null=True, verbose_name="Responsável")
     data_criacao = models.DateTimeField(default=timezone.now, verbose_name="Data de criação")
 
     # Gerais

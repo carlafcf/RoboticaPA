@@ -186,6 +186,42 @@ class ListarPlanosAulaFiltrados(generic.ListView):
         context['form_filtro'] = planos_aula_filtrado.form
         return context
 
+@login_required
+def espaco_usuario(request):
+    planos_aula_usuario = PlanoAula.objects.filter(criador=request.user)
+    id_planos_aula_favoritados = list(LikePlanoAula.objects.filter(usuario=request.user).values_list('plano_aula', flat=True))
+    planos_aula_favoritados = PlanoAula.objects.filter(id__in = id_planos_aula_favoritados)
+    id_planos_aula_executados = list(ExecucaoPlanoAula.objects.filter(usuario=request.user).values_list('plano_aula', flat=True))
+    planos_aula_executados = PlanoAula.objects.filter(id__in = id_planos_aula_executados)
+
+    informacoes = {
+        'planos_aula_usuario': planos_aula_usuario,
+        'planos_aula_favoritados': planos_aula_favoritados,
+        'planos_aula_executados': planos_aula_executados
+    }
+
+    return render(request, 'PlanoAula/espaco_usuario.html', informacoes)
+
+class EspacoUsuario(generic.ListView):
+    model = PlanoAula
+    template_name = 'PlanoAula/espaco_usuario.html'
+    context_object_name = 'lista_planos_aula'
+    paginate_by = 15
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(criador=self.request.user))
+        qs_filtrada = planos_aula_filtrado.qs
+        return qs_filtrada
+
+    def get_context_data(self,**kwargs):
+        context = super(EspacoUsuario,self).get_context_data(**kwargs)
+        meus_planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(criador=self.request.user))
+        planos_aula_favoritados_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.all())
+        context['meus_planos_aula_filtrado'] = meus_planos_aula_filtrado.qs
+        context['form_meus_planos_aula_filtro'] = meus_planos_aula_filtrado.form
+        return context
+
 class ListarPlanosAula(FilterView):
     model = PlanoAula
     template_name = 'PlanoAula/listar.html'
