@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'Usuario',
     'Disciplina',
     'Curso',
+    'Acoes',
     'bootstrap5', #pip install django-bootstrap-v5
     # python -m pip install Pillow
     'widget_tweaks', # pip install django-widget-tweaks
