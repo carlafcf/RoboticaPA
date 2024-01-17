@@ -17,6 +17,14 @@
 {% block conteudo %}
 <br>
 
+
+
+{{images}}
+
+{% for image in images %}
+    <img src ="data:image/jpeg;base64,{{ image }}" style="width:304px;height:228px;">
+{% endfor%} 
+
 <div class="p-3 text-center">
   <button id="btn_inf_gerais" class="btn btn-success" onclick="mostrar_inf_gerais()">Informações gerais</button>
   <button id="btn_programacao" class="btn btn-light" onclick="mostrar_programacao()">Programação</button>

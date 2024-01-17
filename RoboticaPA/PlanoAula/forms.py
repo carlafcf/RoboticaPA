@@ -6,7 +6,7 @@ from PlanoAula.models import PlanoAula
 
 class FormInfGerais(ModelForm):
         
-    required_css_class = 'required'
+    # required_css_class = 'required'
 
     class Meta:
         model = PlanoAula
@@ -20,7 +20,7 @@ class FormInfGerais(ModelForm):
 
 class FormMontagem(ModelForm):
         
-    required_css_class = 'required'
+    # required_css_class = 'required'
 
     class Meta:
         model = PlanoAula
@@ -28,7 +28,7 @@ class FormMontagem(ModelForm):
 
 class FormProgramacao(ModelForm):
         
-    required_css_class = 'required'
+    # required_css_class = 'required'
     
     class Meta:
         model = PlanoAula
@@ -36,7 +36,7 @@ class FormProgramacao(ModelForm):
 
 class FormMidiasRobo(ModelForm):
         
-    required_css_class = 'required'
+    # required_css_class = 'required'
     
     class Meta:
         model = PlanoAula
@@ -44,7 +44,7 @@ class FormMidiasRobo(ModelForm):
 
 class FormMidiasExecucao(ModelForm):
         
-    required_css_class = 'required'
+    # required_css_class = 'required'
     
     class Meta:
         model = PlanoAula

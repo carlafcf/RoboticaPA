@@ -8,6 +8,8 @@ from django.http import HttpResponse
 import json
 from django.http import JsonResponse
 import datetime
+import zipfile
+import base64
 
 from django.urls import reverse_lazy
 from django.views import generic
@@ -60,6 +62,7 @@ class Criar(generic.CreateView, LoginRequiredMixin):
 @login_required
 def criar(request):
     if (request.method == 'POST'):
+        print("Entrei no POST")
         form_inf_gerais = forms.FormInfGerais(request.POST)
         form_montagem = forms.FormMontagem(request.POST)
         form_programacao = forms.FormProgramacao(request.POST, request.FILES)
@@ -312,6 +315,20 @@ class Detalhe(generic.DetailView):
    model = PlanoAula
    template_name = "PlanoAula/detalhes.html"
    context_object_name = "plano_aula"
+
+   def get_context_data(self,**kwargs):
+        context = super(Detalhe,self).get_context_data(**kwargs)
+        images = []
+        if zipfile.is_zipfile(context['plano_aula'].prog_codigos):
+            with zipfile.ZipFile(context['plano_aula'].prog_codigos, 'r') as z:
+                for f in z.namelist():
+                    images.append({f: base64.b64encode(z.read(f)),})
+
+            context['prog_codigos'] = images
+            print(images)
+        else:
+            print("não")
+        return context
 
 class Deletar(generic.DeleteView):
     model = PlanoAula
