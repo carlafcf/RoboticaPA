@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import generic
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 
 from Acoes.models import Acoes, Midia, MensagemAcoes
 from Usuario.models import Usuario
@@ -10,12 +10,34 @@ class CriarAcao(generic.CreateView):
     model = Acoes
     fields = ['titulo', 'tipo', 'data_inicio', 'data_fim', 'local', 'descricao']
     template_name = "Acoes/criar.html"
-    success_url = reverse_lazy('acoes:criar')
 
     def form_valid(self, form):
         usuario = Usuario.objects.get(id=self.request.user.id)
         form.instance.responsavel = usuario
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('acoes:listar_usuario', kwargs={'pk': self.request.user.id})
+
+class EditarAcao(generic.UpdateView):
+    model = Acoes
+    fields = ['titulo', 'tipo', 'data_inicio', 'data_fim', 'local', 'descricao', 'status']
+    template_name = "Acoes/editar.html"
+
+    def form_valid(self, form):
+        usuario = Usuario.objects.get(id=self.request.user.id)
+        form.instance.responsavel = usuario
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('acoes:listar_usuario', kwargs={'pk': self.request.user.id})
+
+def deletar(request, pk):
+    acao = Acoes.objects.get(pk=pk)
+    acao.deletada = True
+    acao.save()
+
+    return redirect('acoes:listar')
     
 class ListarTodasAcoes(generic.ListView):
     model = Acoes
@@ -25,13 +47,13 @@ class ListarTodasAcoes(generic.ListView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        acoes_filtradas = AcoesFiltro(self.request.GET, queryset=Acoes.objects.all())
+        acoes_filtradas = AcoesFiltro(self.request.GET, queryset=Acoes.objects.filter(deletada=False))
         qs_filtrada = acoes_filtradas.qs
         return qs_filtrada
 
     def get_context_data(self,**kwargs):
         context = super(ListarTodasAcoes,self).get_context_data(**kwargs)
-        acoes_filtradas = AcoesFiltro(self.request.GET, queryset=Acoes.objects.all())
+        acoes_filtradas = AcoesFiltro(self.request.GET, queryset=Acoes.objects.filter(deletada=False))
         context['acoes_filtradas'] = acoes_filtradas.qs
         context['form_filtro'] = acoes_filtradas.form
         context['exibir_todos'] = True
@@ -45,32 +67,14 @@ class ListarAcoesUsuario(generic.ListView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        acoes_filtradas = AcoesFiltro(self.request.GET, queryset=Acoes.objects.filter(responsavel__id = self.kwargs['pk']))
+        acoes_filtradas = AcoesFiltro(self.request.GET, queryset=Acoes.objects.filter(deletada=False, responsavel__id = self.kwargs['pk']))
         qs_filtrada = acoes_filtradas.qs
         return qs_filtrada
 
     def get_context_data(self,**kwargs):
         context = super(ListarAcoesUsuario,self).get_context_data(**kwargs)
-        acoes_filtradas = AcoesFiltro(self.request.GET, queryset=Acoes.objects.filter(responsavel__id = self.kwargs['pk']))
+        acoes_filtradas = AcoesFiltro(self.request.GET, queryset=Acoes.objects.filter(deletada=False, responsavel__id = self.kwargs['pk']))
         context['acoes_filtradas'] = acoes_filtradas.qs
         context['form_filtro'] = acoes_filtradas.form
         context['exibir_todos'] = False
         return context
-
-def listar_todas_acoes(request):
-
-    informacoes = {
-        'acoes_usuario': acoes_usuario,
-        'todas_acoes': todas_acoes
-    }
-
-    return render(request, 'Acoes/listar.html', informacoes)
-
-def listar_acoes_usuario(request):
-
-    informacoes = {
-        'acoes_usuario': acoes_usuario,
-        'todas_acoes': todas_acoes
-    }
-
-    return render(request, 'Acoes/listar.html', informacoes)

@@ -52,6 +52,11 @@
                             {{form_filtro.responsavel|add_class:"form-control"}}
                         </div>
                         <br>
+                        <div class="input-group">
+                            <span class="input-group-text text-body">Está em execução</span>
+                            {{form_filtro.status|add_class:"form-control"}}
+                        </div>
+                        <br>
                         <input type="submit" class="btn btn-success" value="Filtrar">
                         <div class="float-end">
                             {% if exibir_todos %}
@@ -73,13 +78,21 @@
         {% else %}
             <a href="{% url 'acoes:listar' %}" class="btn btn-light me-2">Todas as ações</a>
             <a href="{% url 'acoes:listar_usuario' pk=user.pk %}" class="btn btn-success me-2">Minhas ações</a>
+
+            <a href="{% url 'acoes:criar' %}" class="btn btn-info me-2 float-end"><i class="fa fa-plus"></i></a>
         {% endif %}
 
         <br>
+        {% now "Y-m-d" as todays_date %}
         {% for acao in lista_acoes %}
             <a href="">
                 <div class="card">
-                    <div class="card-header bg-gradient-primary pb-0 p-3">
+                    {% if acao.data_fim is not None and todays_date > acao.data_fim|date:"Y-m-d" or acao.status is False %}
+                        <div class="card-header bg-gradient-secondary pb-0 p-3">
+                    {% else %}
+                        <div class="card-header bg-gradient-primary pb-0 p-3">
+                    {% endif %}
+                    
                         <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">{{acao.titulo}}</span>
                         <div class="float-end">
                             <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3">Início: {{ acao.data_inicio|date:"d/m/Y" }}</span>
@@ -88,6 +101,14 @@
                                     Fim: {{ acao.data_fim|date:"d/m/Y" }}
                                 {% endif %}
                             </span>
+                            {% if acao.responsavel.username == user.username %}
+                                <a href="{% url 'acoes:editar' pk=acao.pk %}" class="text-white"><i class="fa fa-pencil"></i></a>
+                                {% if acao.status %}
+                                    <i class="text-white fa fa-lock-open"></i>
+                                {% else %}
+                                    <i class="text-white fa fa-lock"></i>
+                                {% endif %}
+                            {% endif %}
                         </div>
                     </div>
                     <div class="card-body row">

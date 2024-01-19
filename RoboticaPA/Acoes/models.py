@@ -22,12 +22,14 @@ class Acoes(models.Model):
     local = models.CharField(max_length=200, null=True, blank=True, verbose_name="Local")
     descricao = models.TextField(null=True, blank=True,verbose_name="Descrição")
     responsavel = models.ForeignKey(Usuario, on_delete=models.RESTRICT,verbose_name="Responsável")
+    status = models.BooleanField(default=True, verbose_name = "Está em execução")
+    deletada = models.BooleanField(default=False, verbose_name = "Deletado")
 
     def __str__(self):
         return str(self.tipo) + " - " + str(self.titulo)
 
     class Meta:
-        ordering = ['-data_inicio', 'titulo']
+        ordering = ['-status', '-data_inicio', '-data_fim', 'titulo']
         verbose_name = "Ação"
         verbose_name_plural = "Ações"
 

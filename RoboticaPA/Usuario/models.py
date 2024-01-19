@@ -8,7 +8,7 @@ class Usuario(User):
     interesses = models.ManyToManyField('Disciplina.Disciplina', through='Interesses')
 
     def __str__(self):
-        return str(self.id) + " " + self.first_name + " " + self.last_name
+        return self.first_name + " " + self.last_name
 
     class Meta:
         ordering = ['first_name', 'last_name']
