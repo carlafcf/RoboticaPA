@@ -34,14 +34,15 @@ class Acoes(models.Model):
         verbose_name_plural = "Ações"
 
 class Midia(models.Model):
-    acao = models.ForeignKey(Acoes, on_delete=models.RESTRICT,verbose_name="Ação")
+    acao = models.ForeignKey(Acoes, on_delete=models.RESTRICT,verbose_name="Ação", related_name='midias')
     midia = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
+    data = models.DateTimeField(verbose_name = "Data", auto_now_add=True)
 
     def __str__(self):
         return str(self.acao)
 
     class Meta:
-        ordering = ['acao']
+        ordering = ['acao', 'data']
         verbose_name = "Mídia"
         verbose_name_plural = "Mídias"
 

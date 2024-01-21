@@ -8,7 +8,7 @@ from django.http import HttpResponse
 import json
 
 from Acoes.models import Acoes, Midia, MensagemAcoes
-from Acoes.forms import FormNovaMensagem
+from Acoes.forms import FormNovaMensagem, FormNovaMidia
 from Usuario.models import Usuario
 from Acoes.filters import AcoesFiltro
 
@@ -37,6 +37,13 @@ class EditarAcao(generic.UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('acoes:listar_usuario', kwargs={'pk': self.request.user.id})
+    
+    def get_context_data(self,**kwargs):
+        context = super(EditarAcao,self).get_context_data(**kwargs)
+        midias_acao = Midia.objects.filter(acao__id = self.kwargs['pk'])
+        context['midias_acao'] = midias_acao
+        context['form_nova_midia'] = FormNovaMidia()
+        return context
 
 class DetalhesAcao(FormMixin, generic.DetailView):
     model = Acoes

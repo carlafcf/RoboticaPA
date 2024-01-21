@@ -82,11 +82,19 @@
             </div>
         </div>
         <div class="card-body row">
-            {% if acao.midias is not None %}
-
-            {% else %}
-                Não há mídias cadastradas para essa ação.
-            {% endif %}
+            <table>
+                <tr>
+                {% for midia in acao.midias.all %}
+                    {% if forloop.counter|divisibleby:6 %}
+                        </tr><tr>
+                    {% else %}
+                        <td><img src="{{ midia.midia.url }}" style="object-fit: contain;"/></td>
+                    {% endif %}
+                {% empty %}
+                    Não há mídias cadastradas para essa ação.
+                {% endfor %}
+                </tr>
+            </table>
         </div>
     </div>
     <br>
