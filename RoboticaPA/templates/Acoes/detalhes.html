@@ -4,6 +4,8 @@
 {% load pagination_tags %}
 {% load widget_tweaks %}
 
+{% load crispy_forms_tags %} 
+
 {% block conteudo %}
 
 <br>
@@ -97,25 +99,96 @@
         
             <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">Mensagens</span>
             <div class="float-end">
-                <a href="" class="text-white"><i class="fa fa-plus"></i></a>
+                <a href="" class="text-white" data-bs-toggle="modal" data-bs-target="#modalNovaMensagem"><i class="fa fa-plus"></i></a>
             </div>
         </div>
         <div class="card-body row">
             {% for mensagem in lista_mensagens %}
                 <div>
                     <span class="text-sm mb-0 text-uppercase font-weight-bold">{{mensagem.usuario}}</span>
+                    {% if mensagem.usuario.id == request.user.id %}
+                        <a href="" data-bs-toggle="modal" data-bs-target="#modalDeletar" 
+                                data-bs-mensagem="{{mensagem.texto}}" data-bs-mensagem-id="{{mensagem.pk}}" class="text-xxs">
+                            <span class="badge badge-sm bg-gradient-danger">Deletar</span>
+                        </a>
+                    {% endif %}
                     <div class="float-end">
                         <span class="text-sm mb-0 text-uppercase font-weight-bold">{{mensagem.data|date:"d/m/Y H:i"}}</span>
+                        {% if mensagem.mensagem_original is None %}
+                            <a href="" class="text-xs" data-bs-mensagem-id="{{mensagem.pk}}" data-bs-toggle="modal" data-bs-target="#modalNovaMensagem"><i class="fa fa-reply"></i></a>
+                        {% endif %}
                     </div>
                     <br>
-                    <span class="mb-2 text-xs">{{mensagem.texto|linebreaks}}</span>
+                    <span class="text-xs">{{mensagem.texto|linebreaks}}</span>
                 </div>
-                
-                
-                {{mensagem}}
+                {% for reply in mensagem.replies.all %}
+                    <div class="col-1"></div>
+                    <div class="col-11">
+                        <div>
+                            <span class="text-sm mb-0 text-uppercase font-weight-bold">{{reply.usuario}}</span>
+                            {% if reply.usuario.id == request.user.id %}
+                                <a href="" data-bs-toggle="modal" data-bs-target="#modalDeletar" 
+                                        data-bs-mensagem="{{reply.texto}}" data-bs-mensagem-id="{{reply.pk}}" class="text-xxs">
+                                    <span class="badge badge-sm bg-gradient-danger">Deletar</span>
+                                </a>
+                            {% endif %}
+                            <div class="float-end">
+                                <span class="text-sm mb-0 text-uppercase font-weight-bold">{{reply.data|date:"d/m/Y H:i"}}</span>
+                            </div>
+                            <br>
+                            <span class="text-xs">{{reply.texto|linebreaks}}</span>
+                        </div>
+                    </div>
+                {% endfor %}
             {% empty %}
                 Não há nenhuma mensagem.
             {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div id="modalNovaMensagem" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nova mensagem</h5>
+                <button type="button" class="btn close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST">
+                <div class="modal-body">
+                    {%csrf_token%}
+                    {{ form_nome_mensagem.texto|as_crispy_field }}
+                    <input id="hidden_input" type="hidden" name="mensagem_original" />
+                </div>
+                <div class="modal-footer">
+                    <input class="btn btn-info" type="submit" value="Submeter"/>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="modalDeletar" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Deletar mensagem</h5>
+                <button type="button" class="btn close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Deseja deletar a mensagem?</p>
+                <p id="mensagem_modal" class="text-xs"></p>
+                <p class="text-xxs">As respostas à essa mensagem também serão deletadas.</p>
+            </div>
+            <div class="modal-footer">
+                <a id="anchor_deletar_mensagem" href="" class="btn btn-primary">Deletar</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
         </div>
     </div>
 </div>
@@ -125,4 +198,28 @@
 
 {% block scripts %}
 <script src="{% static 'assets/js/custom/acoes.js' %}"></script>
+
+<script>
+    var modalNovaMensagem = document.getElementById('modalNovaMensagem')
+    modalNovaMensagem.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget
+        var mensagemId = button.getAttribute('data-bs-mensagem-id')
+        var hiddenInput = document.getElementById('hidden_input')
+        hiddenInput.value = mensagemId
+    })
+    
+    var modalDeletar = document.getElementById('modalDeletar')
+    modalDeletar.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget
+        var mensagem = button.getAttribute('data-bs-mensagem')
+        var mensagem_modal = document.getElementById('mensagem_modal')
+        mensagem_modal.innerHTML = mensagem
+
+        var anchor = document.getElementById('anchor_deletar_mensagem')
+        var mensagemId = button.getAttribute('data-bs-mensagem-id')
+        var stringHref = "/acoes/deletar-mensagem/" + mensagemId
+        anchor.href = stringHref
+    })
+</script>
+
 {% endblock %}

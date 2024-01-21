@@ -47,15 +47,15 @@ class Midia(models.Model):
 
 class MensagemAcoes(models.Model):
     texto = models.TextField(verbose_name="Texto")
-    data = models.DateTimeField(default = timezone.now, verbose_name = "Data")
+    data = models.DateTimeField(verbose_name = "Data", auto_now_add=True)
     usuario = models.ForeignKey(Usuario, on_delete=models.RESTRICT,verbose_name="Usuário")
     acao = models.ForeignKey(Acoes, on_delete=models.RESTRICT,verbose_name="Ação")
-    mensagem_original = models.ForeignKey('self', null=True, blank = True, on_delete=models.RESTRICT,verbose_name="Mensagem original")
+    mensagem_original = models.ForeignKey('self', null=True, blank = True, related_name='replies', on_delete=models.CASCADE,verbose_name="Mensagem original")
 
     def __str__(self):
         return str(self.acao) + " - " + str(self.data)
 
     class Meta:
-        ordering = ['acao', '-data']
+        ordering = ['acao', 'mensagem_original__pk', '-data']
         verbose_name = "Mensagem"
         verbose_name_plural = "Mensagens"

@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
 from django.views import generic
+from django.views.generic.edit import FormMixin
 from django.urls import reverse, reverse_lazy
 
 from django.http import HttpResponse 
 import json
 
 from Acoes.models import Acoes, Midia, MensagemAcoes
+from Acoes.forms import FormNovaMensagem
 from Usuario.models import Usuario
 from Acoes.filters import AcoesFiltro
 
@@ -35,16 +38,42 @@ class EditarAcao(generic.UpdateView):
     def get_success_url(self):
         return reverse_lazy('acoes:listar_usuario', kwargs={'pk': self.request.user.id})
 
-class DetalhesAcao(generic.DetailView):
+class DetalhesAcao(FormMixin, generic.DetailView):
     model = Acoes
     template_name = 'Acoes/detalhes.html'
     context_object_name = 'acao'
+    form_class = FormNovaMensagem
+
+    def get_success_url(self):
+        return reverse('acoes:detalhes', kwargs={'pk': self.object.id})
 
     def get_context_data(self,**kwargs):
         context = super(DetalhesAcao,self).get_context_data(**kwargs)
-        lista_mensagens = MensagemAcoes.objects.filter(acao__id = self.kwargs['pk'])
+        lista_mensagens = MensagemAcoes.objects.filter(acao__id = self.kwargs['pk'], mensagem_original = None)
         context['lista_mensagens'] = lista_mensagens
+        context['form_nome_mensagem'] = FormNovaMensagem()
         return context
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        usuario = Usuario.objects.get(pk=self.request.user.pk)
+        acao = Acoes.objects.get(pk=self.object.id)
+
+        form.instance.usuario = usuario
+        form.instance.acao = acao
+        if (self.request.POST.get('mensagem_original') != ""):
+            mensagem_original = MensagemAcoes.objects.get(pk=self.request.POST.get('mensagem_original'))
+            form.instance.mensagem_original = mensagem_original
+
+        form.save()
+        return super(DetalhesAcao, self).form_valid(form)
 
 def deletar(request, pk):
     acao = Acoes.objects.get(pk=pk)
@@ -52,6 +81,13 @@ def deletar(request, pk):
     acao.save()
 
     return redirect('acoes:listar')
+
+def deletar_mensagem(request, pk):
+    mensagem = MensagemAcoes.objects.get(id=pk)
+    acao_id = mensagem.acao.id
+    mensagem.delete()
+
+    return HttpResponseRedirect(reverse('acoes:detalhes', kwargs={'pk': acao_id}))
     
 class ListarTodasAcoes(generic.ListView):
     model = Acoes
