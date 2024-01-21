@@ -85,32 +85,35 @@
         <br>
         {% now "Y-m-d" as todays_date %}
         {% for acao in lista_acoes %}
-            <a href="">
-                <div class="card">
-                    {% if acao.data_fim is not None and todays_date > acao.data_fim|date:"Y-m-d" or acao.status is False %}
-                        <div class="card-header bg-gradient-secondary pb-0 p-3">
-                    {% else %}
-                        <div class="card-header bg-gradient-primary pb-0 p-3">
-                    {% endif %}
-                    
-                        <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">{{acao.titulo}}</span>
-                        <div class="float-end">
-                            <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3">Início: {{ acao.data_inicio|date:"d/m/Y" }}</span>
-                            <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3">
-                                {% if acao.data_fim is not None %}
-                                    Fim: {{ acao.data_fim|date:"d/m/Y" }}
-                                {% endif %}
-                            </span>
-                            {% if acao.responsavel.username == user.username %}
-                                <a href="{% url 'acoes:editar' pk=acao.pk %}" class="text-white"><i class="fa fa-pencil"></i></a>
-                                {% if acao.status %}
-                                    <i class="text-white fa fa-lock-open"></i>
-                                {% else %}
-                                    <i class="text-white fa fa-lock"></i>
-                                {% endif %}
+            <div class="card">
+                {% if acao.data_fim is not None and todays_date > acao.data_fim|date:"Y-m-d" or acao.status is False %}
+                    <div id="card_header_informacoes" class="card-header bg-gradient-secondary pb-0 p-3">
+                {% else %}
+                    <div id="card_header_informacoes" class="card-header bg-gradient-primary pb-0 p-3">
+                {% endif %}
+                
+                    <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">
+                        <a href="{% url 'acoes:detalhes' pk=acao.pk %}" class="text-white">
+                            {{acao.titulo}}
+                        </a>
+                    </span>
+                    <div class="float-end">
+                        <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3">
+                            Início: {{ acao.data_inicio|date:"d/m/Y" }}
+                        </span>
+                        <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3">
+                            {% if acao.data_fim is not None %}
+                                Fim: {{ acao.data_fim|date:"d/m/Y" }}
                             {% endif %}
-                        </div>
+                        </span>
+                        {% if acao.responsavel.username == user.username %}
+                            <a href="{% url 'acoes:editar' pk=acao.pk %}" class="text-white">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                        {% endif %}
                     </div>
+                </div>
+                <a href="{% url 'acoes:detalhes' pk=acao.pk %}">
                     <div class="card-body row">
                         <div class="col-4">
                             <span class="mb-2 text-xs">Tipo: 
@@ -137,13 +140,13 @@
                         </div>
                         <div class="col-8">
                             <div class="overflow-auto">
-                                <i class="ni education_hat mr-2"></i>{{ acao.descricao|slice:":300" }}...
+                                {{ acao.descricao|linebreaks|slice:":300" }}...
                             </div>
                         </div>
                         
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
             <br>
             
         {% empty %}

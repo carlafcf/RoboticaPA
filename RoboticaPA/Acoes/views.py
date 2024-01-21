@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.views import generic
 from django.urls import reverse, reverse_lazy
 
+from django.http import HttpResponse 
+import json
+
 from Acoes.models import Acoes, Midia, MensagemAcoes
 from Usuario.models import Usuario
 from Acoes.filters import AcoesFiltro
@@ -31,6 +34,17 @@ class EditarAcao(generic.UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('acoes:listar_usuario', kwargs={'pk': self.request.user.id})
+
+class DetalhesAcao(generic.DetailView):
+    model = Acoes
+    template_name = 'Acoes/detalhes.html'
+    context_object_name = 'acao'
+
+    def get_context_data(self,**kwargs):
+        context = super(DetalhesAcao,self).get_context_data(**kwargs)
+        lista_mensagens = MensagemAcoes.objects.filter(acao__id = self.kwargs['pk'])
+        context['lista_mensagens'] = lista_mensagens
+        return context
 
 def deletar(request, pk):
     acao = Acoes.objects.get(pk=pk)
@@ -78,3 +92,17 @@ class ListarAcoesUsuario(generic.ListView):
         context['form_filtro'] = acoes_filtradas.form
         context['exibir_todos'] = False
         return context
+
+def alterar_status_acao(request, pk):
+    acao = Acoes.objects.get(pk=pk)
+    acao.status = not acao.status
+    acao.save()
+    return finalizar_requisicao_api(acao.status)
+
+def finalizar_requisicao_api(response_data):
+    response_data = response_data
+
+    return HttpResponse(
+        json.dumps(response_data),
+        content_type="application/json"
+    )

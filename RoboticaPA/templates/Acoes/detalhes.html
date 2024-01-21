@@ -1,0 +1,128 @@
+{% extends "Base/base.html" %} 
+
+{% load static %} 
+{% load pagination_tags %}
+{% load widget_tweaks %}
+
+{% block conteudo %}
+
+<br>
+
+<div class="container">
+    <div class="card">
+        {% if acao.data_fim is not None and todays_date > acao.data_fim|date:"Y-m-d" or acao.status is False %}
+            <div id="card_header_informacoes" class="card-header bg-gradient-secondary pb-0 p-3">
+        {% else %}
+            <div id="card_header_informacoes" class="card-header bg-gradient-primary pb-0 p-3">
+        {% endif %}
+        
+            <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">{{acao.titulo}}</span>
+            <div class="float-end">
+                <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3">Início: {{ acao.data_inicio|date:"d/m/Y" }}</span>
+                <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3">
+                    {% if acao.data_fim is not None %}
+                        Fim: {{ acao.data_fim|date:"d/m/Y" }}
+                    {% endif %}
+                </span>
+                {% if acao.responsavel.username == user.username %}
+                    <a href="{% url 'acoes:editar' pk=acao.pk %}" class="text-white"><i class="fa fa-pencil"></i></a>
+                    {% if acao.status %}
+                        <a onclick="alterar_status_acao({{acao.pk}})"><i id="icone_locker" class="text-white fa fa-lock-open"></i></a>
+                    {% else %}
+                        <a onclick="alterar_status_acao({{acao.pk}})"><i id="icone_locker" class="text-white fa fa-lock"></i></a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="card-body row">
+            <div class="col-4">
+                <span class="mb-2 text-xs">Tipo: 
+                    <span class="text-dark font-weight-bold ms-sm-2">
+                        {{ acao.tipo }}
+                    </span>
+                </span>
+            </div>
+            <div class="col-4">
+                <span class="mb-2 text-xs">Local: 
+                    <span class="text-dark font-weight-bold ms-sm-2">
+                        {% if acao.local is not None %}
+                            {{ acao.local }}
+                        {% endif %}
+                    </span>
+                </span>
+            </div>
+            <div class="col-4">
+                <span class="mb-2 text-xs">Responsável: 
+                    <span class="text-dark font-weight-bold ms-sm-2">
+                        {{ acao.responsavel }}
+                    </span>
+                </span>
+            </div>
+            <div class="overflow-auto">
+                <i class="ni education_hat mr-2"></i>
+                <p>{{ acao.descricao|linebreaks }}</p>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="card">
+        {% if acao.data_fim is not None and todays_date > acao.data_fim|date:"Y-m-d" or acao.status is False %}
+            <div id="card_header_midias" class="card-header bg-gradient-secondary pb-0 p-3">
+        {% else %}
+            <div id="card_header_midias" class="card-header bg-gradient-warning pb-0 p-3">
+        {% endif %}
+        
+            <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">Mídias</span>
+            <div class="float-end">
+                {% if acao.responsavel.username == user.username %}
+                    <a href="" class="text-white"><i class="fa fa-plus"></i></a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card-body row">
+            {% if acao.midias is not None %}
+
+            {% else %}
+                Não há mídias cadastradas para essa ação.
+            {% endif %}
+        </div>
+    </div>
+    <br>
+    <div class="card">
+        {% if acao.data_fim is not None and todays_date > acao.data_fim|date:"Y-m-d" or acao.status is False %}
+            <div id="card_header_mensagens" class="card-header bg-gradient-secondary pb-0 p-3">
+        {% else %}
+            <div id="card_header_mensagens" class="card-header bg-gradient-success pb-0 p-3">
+        {% endif %}
+        
+            <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">Mensagens</span>
+            <div class="float-end">
+                <a href="" class="text-white"><i class="fa fa-plus"></i></a>
+            </div>
+        </div>
+        <div class="card-body row">
+            {% for mensagem in lista_mensagens %}
+                <div>
+                    <span class="text-sm mb-0 text-uppercase font-weight-bold">{{mensagem.usuario}}</span>
+                    <div class="float-end">
+                        <span class="text-sm mb-0 text-uppercase font-weight-bold">{{mensagem.data|date:"d/m/Y H:i"}}</span>
+                    </div>
+                    <br>
+                    <span class="mb-2 text-xs">{{mensagem.texto|linebreaks}}</span>
+                </div>
+                
+                
+                {{mensagem}}
+            {% empty %}
+                Não há nenhuma mensagem.
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} 
+
+{% block scripts %}
+<script src="{% static 'assets/js/custom/acoes.js' %}"></script>
+{% endblock %}
