@@ -5,16 +5,21 @@ from Acoes.models import MensagemAcoes, Midia
 
 class FormNovaMidia(ModelForm):
 
+    midia = forms.ImageField(
+        required=True,
+        widget=forms.ClearableFileInput(attrs={'name': 'midia', 'id': 'midia', 'multiple': True})
+    )
+
     class Meta:
         model = Midia
         fields = ('midia',)
     
-    def save(self, commit=True):
-        instance = super(FormNovaMidia, self).save(commit=False)
+    # def save(self, commit=True):
+    #     instance = super(FormNovaMidia, self).save(commit=False)
         
-        if commit:
-            instance.save()
-        return instance
+    #     if commit:
+    #         instance.save()
+    #     return instance
 
 class FormNovaMensagem(ModelForm):
 

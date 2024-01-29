@@ -2,7 +2,7 @@ from django.contrib.auth import forms as auth_forms
 from django import forms
 from django.forms import ModelForm
 
-from PlanoAula.models import PlanoAula
+from PlanoAula.models import PlanoAula, FotoRobo, VideoRobo, FotoExecucao, VideoExecucao
 
 class FormInfGerais(ModelForm):
         
@@ -19,36 +19,58 @@ class FormInfGerais(ModelForm):
         }
 
 class FormMontagem(ModelForm):
-        
-    # required_css_class = 'required'
 
     class Meta:
         model = PlanoAula
         fields = ('robo_equipamento', 'robo_descricao', 'robo_link')
 
 class FormProgramacao(ModelForm):
-        
-    # required_css_class = 'required'
     
     class Meta:
         model = PlanoAula
         fields = ('prog_linguagem', 'prog_descricao', 'prog_link', 'prog_codigos')
 
-class FormMidiasRobo(ModelForm):
-        
-    # required_css_class = 'required'
+class FormMidiasRoboFotos(ModelForm):
     
     class Meta:
-        model = PlanoAula
-        fields = ('robo_fotos', 'robo_videos', 'robo_pdf')
+        model = FotoRobo
+        fields = ('robo_foto',)
+        widgets = {
+            'robo_foto': forms.ClearableFileInput(attrs={'multiple': True}),
+        }
 
-class FormMidiasExecucao(ModelForm):
-        
-    # required_css_class = 'required'
+class FormMidiasRoboVideos(ModelForm):
+    
+    class Meta:
+        model = VideoRobo
+        fields = ('robo_video',)
+        widgets = {
+            'robo_video': forms.ClearableFileInput(attrs={'multiple': True}),
+        }
+
+class FormMidiasRobo(ModelForm):
     
     class Meta:
         model = PlanoAula
-        fields = ('exec_fotos', 'exec_videos')
+        fields = ('robo_pdf',)
+
+class FormMidiasExecucaoFotos(ModelForm):
+    
+    class Meta:
+        model = FotoExecucao
+        fields = ('execucao_foto',)
+        widgets = {
+            'execucao_foto': forms.ClearableFileInput(attrs={'multiple': True}),
+        }
+
+class FormMidiasExecucaoVideos(ModelForm):
+    
+    class Meta:
+        model = VideoExecucao
+        fields = ('execucao_video',)
+        widgets = {
+            'execucao_video': forms.ClearableFileInput(attrs={'multiple': True}),
+        }
 
 
 class FormEditarPlano_aula(ModelForm):

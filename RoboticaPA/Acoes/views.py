@@ -4,6 +4,8 @@ from django.views import generic
 from django.views.generic.edit import FormMixin
 from django.urls import reverse, reverse_lazy
 
+from django.db import transaction
+
 from django.http import HttpResponse 
 import json
 
@@ -40,6 +42,51 @@ class EditarAcao(generic.UpdateView):
     
     def get_context_data(self,**kwargs):
         context = super(EditarAcao,self).get_context_data(**kwargs)
+        midias_acao = Midia.objects.filter(acao__id = self.kwargs['pk'])
+        context['midias_acao'] = midias_acao
+        context['form_nova_midia'] = FormNovaMidia()
+        return context
+    
+def editar_midia(request, pk):
+
+    acao = Acoes.objects.get(id=pk)
+
+    if (request.method == 'POST'):
+        form = FormNovaMidia(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            for file in request.FILES.getlist('listing_images'):
+                Midia.objects.create(acao=acao, midia=file)
+    else:
+        midias_acao = Midia.objects.filter(acao__id = pk)
+
+        informacoes =  {
+            'midias_acao': midias_acao,
+            'form_nova_midia': FormNovaMidia()
+        }
+
+        return render(request, "Acoes/editar_midias.html", informacoes)
+
+class EditarMidia(generic.DetailView):
+    model = Midia
+    template_name = "Acoes/editar_midias.html"
+
+    def form_valid(self, form):
+        acao = Acoes.objects.get(id=self.kwargs['pk'])
+        form.instance.acao = acao
+
+        with transaction.atomic():
+            midias = self.request.FILES.getlist("midia")
+            for midia in midias:
+                Midia.objects.create(acao=acao, midia=midia)
+
+        return super().form_valid(form)
+        # return True
+
+    def get_success_url(self):
+        return reverse_lazy('acoes:editar_midia', kwargs={'pk': self.kwargs['pk']})
+    
+    def get_context_data(self,**kwargs):
+        context = super(EditarMidia,self).get_context_data(**kwargs)
         midias_acao = Midia.objects.filter(acao__id = self.kwargs['pk'])
         context['midias_acao'] = midias_acao
         context['form_nova_midia'] = FormNovaMidia()

@@ -14,4 +14,7 @@ urlpatterns = [
     path('alterar-status-acao/<int:pk>', views.alterar_status_acao, name='alterar_status_acao'),
 
     path('deletar-mensagem/<int:pk>/', views.deletar_mensagem, name='deletar_mensagem'),
+
+    path('editar-midia/<int:pk>/', views.editar_midia, name='editar_midia'),
+
 ]
