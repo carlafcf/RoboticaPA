@@ -196,12 +196,3 @@ def definir_disciplinas_por_categoria(usuario_id, categoria):
                          x not in disciplinas_executadas]
 
     return todas_disciplinas
-
-    # print("Interesse:")
-    # print(disciplinas_interesse)
-    # print("Like")
-    # print(disciplinas_favoritadas)
-    # print("Executed")
-    # print(disciplinas_executadas)
-    # print("Todas")
-    # print(todas_disciplinas)

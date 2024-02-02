@@ -45,7 +45,8 @@ class FormMidiasRoboVideos(ModelForm):
         model = VideoRobo
         fields = ('robo_video',)
         widgets = {
-            'robo_video': forms.ClearableFileInput(attrs={'multiple': True}),
+            'robo_video': forms.ClearableFileInput(attrs={'multiple': True, 'accept': ".mp4, .avi, .wmv, .wkv, .mov"}),
+            # "robo_video": forms.FileInput(attrs={'accept': ".mp4, .avi, .wmv, .wkv, .mov"}),
         }
 
 class FormMidiasRobo(ModelForm):
@@ -69,7 +70,7 @@ class FormMidiasExecucaoVideos(ModelForm):
         model = VideoExecucao
         fields = ('execucao_video',)
         widgets = {
-            'execucao_video': forms.ClearableFileInput(attrs={'multiple': True}),
+            'execucao_video': forms.ClearableFileInput(attrs={'multiple': True, 'accept': ".mp4, .avi, .wmv, .wkv, .mov"}),
         }
 
 

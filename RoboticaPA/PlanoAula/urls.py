@@ -13,9 +13,10 @@ urlpatterns = [
     path('detalhes/<int:pk>/', views.Detalhe.as_view(), name='detalhes'),
     path('programacao/<int:pk>/', views.Programacao.as_view(), name='programacao'),
     path('editar/<int:pk>/', views.Editar.as_view(), name='editar'),
-    path('listar/<int:pk>', views.listar_usuario, name='listar_usuario'),
     path('listar/', views.ListarPlanosAulaFiltrados.as_view(), name='listar'),
-    path('espaco-usuario/', views.espaco_usuario, name='espaco_usuario'),
+    path('listar/<int:pk>', views.ListarPlanosAulaFiltradosUsuario.as_view(), name='listar_usuario'),
+    path('listar-favoritos/<int:pk>', views.ListarPlanosAulaFiltradosFavoritos.as_view(), name='listar_favoritos'),
+    path('listar-executados/<int:pk>', views.ListarPlanosAulaFiltradosExecutados.as_view(), name='listar_executados'),
     path('programacao/<int:pk>/', views.Programacao.as_view(), name='programacao'),
 
     path('marcar-favorito/<int:plano_aula>/<int:usuario>/', views.marcar_favorito, name="marcar_favorito"),

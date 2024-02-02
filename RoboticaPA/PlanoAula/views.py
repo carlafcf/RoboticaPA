@@ -1,5 +1,6 @@
 from audioop import reverse
 from django import forms
+from django.contrib import messages 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -61,10 +62,7 @@ class Criar(generic.CreateView, LoginRequiredMixin):
 
 @login_required
 def criar(request):
-    print(request.user.id)
-    print(Usuario.objects.get(id=request.user.id))
     if (request.method == 'POST'):
-        print("Entrei no POST")
         form_inf_gerais = forms.FormInfGerais(request.POST)
         form_montagem = forms.FormMontagem(request.POST)
         form_programacao = forms.FormProgramacao(request.POST, request.FILES)
@@ -78,9 +76,9 @@ def criar(request):
         form_midias_execucao_videos = forms.FormMidiasExecucaoVideos(request.POST)
         execucao_videos = request.FILES.getlist('execucao_video')
         if (form_inf_gerais.is_valid() and form_montagem.is_valid() and form_programacao.is_valid()
-                and form_midias_robo.is_valid() and 
-                form_midias_robo_fotos.is_valid() and form_midias_robo_videos.is_valid() and
-                form_midias_execucao_fotos.is_valid() and form_midias_execucao_videos.is_valid()):
+                and form_midias_robo.is_valid() and form_midias_robo_fotos.is_valid() 
+                and form_midias_robo_videos.is_valid() and form_midias_execucao_fotos.is_valid() 
+                and form_midias_execucao_videos.is_valid()):
 
             conteudos = request.POST.get('lista_id_conteudos','').split(',')
 
@@ -140,8 +138,9 @@ def criar(request):
                     VideoExecucao(plano_aula=plano_aula, execucao_video=video).save()
 
             # Adicionar conteúdos
-            for conteudo in conteudos:
-                plano_aula.conteudos.add(Conteudo.objects.get(id=int(conteudo)))
+            if (conteudos != ['']):
+                for conteudo in conteudos:
+                    plano_aula.conteudos.add(Conteudo.objects.get(id=int(conteudo)))
             
             # Salvar
             plano_aula.save()
@@ -219,6 +218,77 @@ class ListarPlanosAulaFiltrados(generic.ListView):
         planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.all())
         context['planos_aula_filtrado'] = planos_aula_filtrado.qs
         context['form_filtro'] = planos_aula_filtrado.form
+        context['tipo'] = "todos"
+        return context
+
+class ListarPlanosAulaFiltradosUsuario(generic.ListView):
+    model = PlanoAula
+    template_name = 'PlanoAula/listar.html'
+    context_object_name = 'lista_planos_aula'
+    paginate_by = 15
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        usuario = Usuario.objects.get(pk=self.kwargs.get('pk'))
+        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(criador=usuario))
+        qs_filtrada = planos_aula_filtrado.qs
+        return qs_filtrada
+
+    def get_context_data(self,**kwargs):
+        context = super(ListarPlanosAulaFiltradosUsuario,self).get_context_data(**kwargs)
+        usuario = Usuario.objects.get(pk=self.kwargs.get('pk'))
+        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(criador=usuario))
+        context['planos_aula_filtrado'] = planos_aula_filtrado.qs
+        context['form_filtro'] = planos_aula_filtrado.form
+        context['tipo'] = "usuario"
+        return context
+
+class ListarPlanosAulaFiltradosFavoritos(generic.ListView):
+    model = PlanoAula
+    template_name = 'PlanoAula/listar.html'
+    context_object_name = 'lista_planos_aula'
+    paginate_by = 15
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        usuario = Usuario.objects.get(pk=self.kwargs.get('pk'))
+        id_planos_aula_favoritos = list(LikePlanoAula.objects.filter(usuario=usuario).values_list('plano_aula', flat=True))
+        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(id__in = id_planos_aula_favoritos))
+        qs_filtrada = planos_aula_filtrado.qs
+        return qs_filtrada
+
+    def get_context_data(self,**kwargs):
+        context = super(ListarPlanosAulaFiltradosFavoritos,self).get_context_data(**kwargs)
+        usuario = Usuario.objects.get(pk=self.kwargs.get('pk'))
+        id_planos_aula_favoritos = list(LikePlanoAula.objects.filter(usuario=usuario).values_list('plano_aula', flat=True))
+        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(id__in = id_planos_aula_favoritos))
+        context['planos_aula_filtrado'] = planos_aula_filtrado.qs
+        context['form_filtro'] = planos_aula_filtrado.form
+        context['tipo'] = "favoritos"
+        return context
+
+class ListarPlanosAulaFiltradosExecutados(generic.ListView):
+    model = PlanoAula
+    template_name = 'PlanoAula/listar.html'
+    context_object_name = 'lista_planos_aula'
+    paginate_by = 15
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        usuario = Usuario.objects.get(pk=self.kwargs.get('pk'))
+        id_planos_aula_executados = list(ExecucaoPlanoAula.objects.filter(usuario=usuario).values_list('plano_aula', flat=True))
+        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(id__in = id_planos_aula_executados))
+        qs_filtrada = planos_aula_filtrado.qs
+        return qs_filtrada
+
+    def get_context_data(self,**kwargs):
+        context = super(ListarPlanosAulaFiltradosExecutados,self).get_context_data(**kwargs)
+        usuario = Usuario.objects.get(pk=self.kwargs.get('pk'))
+        id_planos_aula_executados = list(ExecucaoPlanoAula.objects.filter(usuario=usuario).values_list('plano_aula', flat=True))
+        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(id__in = id_planos_aula_executados))
+        context['planos_aula_filtrado'] = planos_aula_filtrado.qs
+        context['form_filtro'] = planos_aula_filtrado.form
+        context['tipo'] = "executados"
         return context
 
 @login_required
@@ -350,16 +420,14 @@ class Detalhe(generic.DetailView):
 
    def get_context_data(self,**kwargs):
         context = super(Detalhe,self).get_context_data(**kwargs)
-        images = []
-        if zipfile.is_zipfile(context['plano_aula'].prog_codigos):
-            with zipfile.ZipFile(context['plano_aula'].prog_codigos, 'r') as z:
-                for f in z.namelist():
-                    images.append({f: base64.b64encode(z.read(f)),})
-
-            context['prog_codigos'] = images
-            print(images)
-        else:
-            print("não")
+        robo_fotos = FotoRobo.objects.filter(plano_aula = self.get_object().pk)
+        context['robo_fotos'] = robo_fotos
+        robo_videos = VideoRobo.objects.filter(plano_aula = self.get_object().pk)
+        context['robo_videos'] = robo_videos
+        execucao_fotos = FotoExecucao.objects.filter(plano_aula = self.get_object().pk)
+        context['execucao_fotos'] = execucao_fotos
+        execucao_videos = VideoExecucao.objects.filter(plano_aula = self.get_object().pk)
+        context['execucao_videos'] = execucao_videos
         return context
 
 class Deletar(generic.DeleteView):

@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.core.validators import FileExtensionValidator
 
 from Usuario.models import Usuario
 from Disciplina.models import Conteudo
@@ -8,10 +9,10 @@ def user_directory_path(instance, filename):
     return 'user_{0}/plano_aula_{1}/{2}'.format(instance.responsavel.id, instance.data_criacao, filename)
 
 def diretorio_plano_aula(instance, filename):
-    return 'plano_aula_{0}/{1}'.format(instance.id, filename)
+    return 'plano_aula_{0}_{1}/{2}'.format(instance.data_criacao.date(), instance.data_criacao.strftime("%H-%M-%S"), filename)
 
 def diretorio_plano_aula_midias(instance, filename):
-    return 'plano_aula_{0}/{1}'.format(instance.plano_aula.id, filename)
+    return 'plano_aula_{0}_{1}/{2}'.format(instance.plano_aula.data_criacao.date(), instance.plano_aula.data_criacao.strftime("%H-%M-%S"), filename)
 
 class PlanoAula(models.Model):
 
@@ -61,7 +62,7 @@ class FotoRobo(models.Model):
 
 class VideoRobo(models.Model):
     plano_aula = models.ForeignKey(PlanoAula, related_name='videos_robo', on_delete=models.RESTRICT,null=True, verbose_name="Plano de aula")
-    robo_video = models.ImageField(upload_to=diretorio_plano_aula_midias, blank=True, null=True, verbose_name="Vídeos do robô")
+    robo_video = models.FileField(upload_to=diretorio_plano_aula_midias, blank=True, null=True, verbose_name="Vídeos do robô")
 
     def __str__(self):
         return str(self.plano_aula)
@@ -85,7 +86,7 @@ class FotoExecucao(models.Model):
 
 class VideoExecucao(models.Model):
     plano_aula = models.ForeignKey(PlanoAula, related_name='videos_execucao', on_delete=models.RESTRICT,null=True, verbose_name="Plano de aula")
-    execucao_video = models.ImageField(upload_to=diretorio_plano_aula_midias, blank=True, null=True, verbose_name="Vídeos da execução da atividade")
+    execucao_video = models.FileField(upload_to=diretorio_plano_aula_midias, blank=True, null=True, verbose_name="Vídeos da execução da atividade")
 
     def __str__(self):
         return str(self.plano_aula)
