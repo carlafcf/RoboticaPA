@@ -23,6 +23,7 @@ function marcar_executado(plano_aula, usuario) {
 function alterar_contador(tipo, id, returndata) {
     const str = "contador_" + tipo + "_" + id.toString()
     const elemento = document.getElementById(str)
+    console.log('{{tipo}}')
     if (returndata == 0) {
         elemento.textContent = (parseInt(elemento.textContent) - 1).toString();
     }

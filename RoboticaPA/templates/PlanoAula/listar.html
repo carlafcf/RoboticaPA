@@ -6,18 +6,6 @@
 {% load widget_tweaks %}
 {% load static %}
 
-{% block breadcrumb1 %}
-Plano de aula
-{% endblock %}
-
-{% block breadcrumb2 %}
-Listar --
-{% endblock %}
-
-{% block titulo %}
-Planos de aula de robótica
-{% endblock %}
-
 {% block conteudo %}
 <br>
 <div class="row">
@@ -104,68 +92,97 @@ Planos de aula de robótica
             <a href="{% url 'plano_aula:listar_favoritos' pk=user.pk %}" class="btn btn-light me-2">Favoritos</a>
             <a href="{% url 'plano_aula:listar_executados' pk=user.pk %}" class="btn btn-success me-2">Executados</a>
         {% endif %}
+        <br>
         {% for aula in lista_planos_aula %}
-            <a href="{% url 'plano_aula:detalhes' pk=aula.pk %}">
-                <div class="card">
+                <div class="card" id="card_plano_aula_{{aula.id}}">
                     <div class="card-header bg-gradient-primary pb-0 p-3">
                         <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">{{aula.titulo}}</span>
                         <div class="float-end">
-                            <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3"><i class="fas fa-thumbs-up text-white px-3"></i>{{ aula.likes.count }}</span>
-                            <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3"><i class="fas fa-play text-white px-3"></i>{{ aula.execucoes.count }}</span>
+                            <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">
+                                {% if aula.likes.all|encontrar_usuario_lista:user.id %}
+                                    <a onclick="marcar_favorito({{aula.id}}, {{user.id}})">
+                                        <i class="fas fa-thumbs-up px-3" id="icon_thumbs_up_{{aula.id}}"
+                                        style="color: var(--bs-success);
+                                                -webkit-text-stroke: 1px white;"></i>
+                                    </a>
+                                {% else %}
+                                    <a onclick="marcar_favorito({{aula.id}}, {{user.id}})">
+                                        <i class="fas fa-thumbs-up px-3" id="icon_thumbs_up_{{aula.id}}"
+                                        style="color: white;"></i>
+                                    </a>
+                                {% endif %}
+                                <span class="text-sm mb-0 text-uppercase text-white font-weight-bold" id="contador_thumbs_up_{{aula.id}}">{{ aula.likes.count }}</span>
+                            </span>
+                            <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">
+                                {% if aula.execucoes.all|encontrar_usuario_lista:user.id %}
+                                    <a onclick="marcar_executado({{aula.id}}, {{user.id}})">
+                                        <i class="fas fa-play px-3" id="icon_play_{{aula.id}}"
+                                        style="color: var(--bs-success);
+                                                -webkit-text-stroke: 1px white;"></i>
+                                    </a>
+                                {% else %}
+                                    <a onclick="marcar_executado({{aula.id}}, {{user.id}})">
+                                        <i class="fas fa-play px-3" id="icon_play_{{aula.id}}"
+                                        style="color: white;"></i>
+                                    </a>
+                                {% endif %}
+                                <span class="text-sm mb-0 text-uppercase text-white font-weight-bold" id="contador_play_{{aula.id}}">{{ aula.execucoes.count }}</span>
+                            </span>
                         </div>
                     </div>
-                    <div class="card-body row">
-                        <div class="col-4">
-                            {% if aula|plano_aula_midias_foto %}
-                                <div id="midias_robo_{{aula.pk}}" class="carousel slide" data-bs-interval="false">
-                                    <div class="carousel-indicators">
-                                        {% for foto in aula|plano_aula_midias_foto %}
-                                            {% if forloop.counter == 1 %}
-                                                <button type="button" data-bs-target="#midias_robo_{{aula.pk}}" data-bs-slide-to="{{forloop.counter0}}" class="active" aria-current="true" aria-label="Slide {{forloop.counter}}"></button>
-                                            {% else %}
-                                                <button type="button" data-bs-target="#midias_robo_{{aula.pk}}" data-bs-slide-to="{{forloop.counter0}}" aria-label="Slide {{forloop.counter}}"></button>
-                                            {% endif %}
-                                        {% endfor %}
+                    <a href="{% url 'plano_aula:detalhes' pk=aula.pk %}">
+                        <div class="card-body row">
+                            <div class="col-4">
+                                {% if aula|plano_aula_midias_foto %}
+                                    <div id="midias_robo_{{aula.pk}}" class="carousel slide" data-bs-interval="false">
+                                        <div class="carousel-indicators">
+                                            {% for foto in aula|plano_aula_midias_foto %}
+                                                {% if forloop.counter == 1 %}
+                                                    <button type="button" data-bs-target="#midias_robo_{{aula.pk}}" data-bs-slide-to="{{forloop.counter0}}" class="active" aria-current="true" aria-label="Slide {{forloop.counter}}"></button>
+                                                {% else %}
+                                                    <button type="button" data-bs-target="#midias_robo_{{aula.pk}}" data-bs-slide-to="{{forloop.counter0}}" aria-label="Slide {{forloop.counter}}"></button>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <div class="carousel-inner">
+                                            {% for foto in aula|plano_aula_midias_foto %}
+                                                {% if forloop.counter == 1 %}
+                                                    <div class="carousel-item active">
+                                                {% else %}
+                                                    <div class="carousel-item ">
+                                                {% endif %}
+                                                        <img class="d-block w-100" src="{{foto}}">
+                                                    </div>
+                                            {% endfor %}
+                                        </div>
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#midias_robo_{{aula.pk}}" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#midias_robo_{{aula.pk}}" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
                                     </div>
-                                    <div class="carousel-inner">
-                                        {% for foto in aula|plano_aula_midias_foto %}
-                                            {% if forloop.counter == 1 %}
-                                                <div class="carousel-item active">
-                                            {% else %}
-                                                <div class="carousel-item ">
-                                            {% endif %}
-                                                    <img class="d-block w-100" src="{{foto}}">
-                                                </div>
-                                        {% endfor %}
-                                    </div>
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#midias_robo_{{aula.pk}}" data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Previous</span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#midias_robo_{{aula.pk}}" data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Next</span>
-                                    </button>
-                                </div>
-                            {% else %}
-                                <img src="{% static 'assets/img/carousel-2.jpg' %}" alt="" class="img-fluid">
-                            {% endif %}
-                            {% for conteudo in aula.conteudos.all %} 
-                                <span class="mb-2 text-xs">{{conteudo.disciplina}}: 
-                                    <span class="text-dark font-weight-bold ms-sm-2">{{conteudo.nome}}</span>
-                                </span>
-                                <br>
-                            {% endfor %}
-                        </div>
-                        <div class="col-8">
-                            <div class="overflow-auto">
-                                <i class="ni education_hat mr-2"></i>{{ aula.descricao_atividade|slice:":600" }}...
+                                {% else %}
+                                    <img src="{% static 'assets/img/carousel-2.jpg' %}" alt="" class="img-fluid">
+                                {% endif %}
+                                {% for conteudo in aula.conteudos.all %} 
+                                    <span class="mb-2 text-xs">{{conteudo.disciplina}}: 
+                                        <span class="text-dark font-weight-bold ms-sm-2">{{conteudo.nome}}</span>
+                                    </span>
+                                    <br>
+                                {% endfor %}
                             </div>
+                            <div class="col-8">
+                                <div class="overflow-auto">
+                                    <i class="ni education_hat mr-2"></i>{{ aula.descricao_atividade|slice:":600" }}...
+                                </div>
+                            </div>
+                            
                         </div>
-                        
-                    </div>
+                    </a>
                 </div>
-            </a>
             <br>
             
         {% empty %}
@@ -236,8 +253,11 @@ Planos de aula de robótica
 </div>
 
 <br/>
-
-
-    
   
+{% endblock %}
+
+
+
+{% block scripts %}
+    <script src="{% static 'assets/js/custom/marcar_favorito_executado.js' %}"></script>
 {% endblock %}
