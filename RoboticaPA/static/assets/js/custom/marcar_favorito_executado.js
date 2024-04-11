@@ -1,21 +1,37 @@
-function marcar_favorito(plano_aula, usuario) {
+function marcar_favorito(plano_aula, usuario, funcao_listar) {
     $.ajax({
         url : "/plano-aula/marcar-favorito/"+plano_aula+"/"+usuario,
         method : "GET",
         success: function (returndata) {
             alterar_contador("thumbs_up", plano_aula, returndata)
             trocar_cor("thumbs_up", plano_aula, returndata);
+            if (funcao_listar==='favoritos' && returndata === 0) {
+                document.getElementById("card_plano_aula_"+plano_aula).remove()
+            }
         }
     });
 }
 
-function marcar_executado(plano_aula, usuario) {
+function marcar_executado(plano_aula, usuario, funcao_listar) {
     $.ajax({
         url : "/plano-aula/marcar-executado/"+plano_aula+"/"+usuario,
         method : "GET",
         success: function (returndata) {
             alterar_contador("play", plano_aula, returndata)
             trocar_cor("play", plano_aula, returndata);
+            if (funcao_listar==='executados' && returndata === 0) {
+                document.getElementById("card_plano_aula_"+plano_aula).remove()
+                var main_div = document.getElementById("main_div")
+                var cards = document.getElementsByClassName("card")
+                alert(cards)
+                alert(cards.length)
+                // if (main_div.contains(childDiv)) {
+                //     alert("yes");
+                //   }
+                //   else{
+                //     alert("no");
+                //   }
+            }
         }
     });
 }

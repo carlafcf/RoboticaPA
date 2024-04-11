@@ -75,13 +75,13 @@
                         <div class="float-end">
                             <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">
                                 {% if plano_aula.0.likes.all|encontrar_usuario_lista:user.id %}
-                                    <a onclick="marcar_favorito({{plano_aula.0.id}}, {{user.id}})">
+                                    <a onclick="marcar_favorito({{plano_aula.0.id}}, {{user.id}}, 'todos')">
                                         <i class="fas fa-thumbs-up px-3" id="icon_thumbs_up_{{plano_aula.0.id}}"
                                         style="color: var(--bs-success);
                                                 -webkit-text-stroke: 1px white;"></i>
                                     </a>
                                 {% else %}
-                                    <a onclick="marcar_favorito({{plano_aula.0.id}}, {{user.id}})">
+                                    <a onclick="marcar_favorito({{plano_aula.0.id}}, {{user.id}}, 'todos')">
                                         <i class="fas fa-thumbs-up px-3" id="icon_thumbs_up_{{plano_aula.0.id}}"
                                         style="color: white;"></i>
                                     </a>
@@ -90,13 +90,13 @@
                             </span>
                             <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">
                                 {% if plano_aula.0.execucoes.all|encontrar_usuario_lista:user.id %}
-                                    <a onclick="marcar_executado({{plano_aula.0.id}}, {{user.id}})">
+                                    <a onclick="marcar_executado({{plano_aula.0.id}}, {{user.id}}, 'todos')">
                                         <i class="fas fa-play px-3" id="icon_play_{{plano_aula.0.id}}"
                                         style="color: var(--bs-success);
                                                 -webkit-text-stroke: 1px white;"></i>
                                     </a>
                                 {% else %}
-                                    <a onclick="marcar_executado({{plano_aula.0.id}}, {{user.id}})">
+                                    <a onclick="marcar_executado({{plano_aula.0.id}}, {{user.id}}, 'todos')">
                                         <i class="fas fa-play px-3" id="icon_play_{{plano_aula.0.id}}"
                                         style="color: white;"></i>
                                     </a>
