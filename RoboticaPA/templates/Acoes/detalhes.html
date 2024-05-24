@@ -84,9 +84,10 @@
         <div class="card-body row">
             {% for midia in acao.midias.all %}
                 <div class="col-lg-2 col-md-4 col-6">
-                    <a href="" data-bs-toggle="modal" data-bs-target="#modalMidia" 
+                    <a href="" data-bs-toggle="modal" data-bs-target="#lightbox" 
                             data-bs-midia-url="{{midia.midia.url}}" class="text-xxs">
-                        <img src="{{ midia.midia.url }}" style="max-height: 100px;max-width: 100px;object-fit: contain;"/>
+                        <img src="{{ midia.midia.url }}" style="max-height: 100px;max-width: 100px;object-fit: contain;"
+                            data-bs-target="#indicators" data-bs-slide-to="{{forloop.counter0}}"/>
                     </a>
                 </div>
             {% empty %}
@@ -152,16 +153,43 @@
     </div>
 </div>
 
-<div id="modalMidia" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+<div class="modal fade" id="lightbox" role="dialog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="btn close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <img id="midia_modal" style="width: 100%;" src="{{ midia.midia.url }}"/>
+            <button type="button" class="btn close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div id="indicators" class="carousel slide" data-interval="false">
+                <ol class="carousel-indicators">
+                    {% for midia in acao.midias.all %}
+                        {% if forloop.counter0 == 0 %}
+                            <li data-bs-target="#indicators" data-bs-slide-to="{{forloop.counter0}}" class="active"></li>
+                        {% else %}
+                            <li data-bs-target="#indicators" data-bs-slide-to="{{forloop.counter0}}"></li>
+                        {% endif %}
+                    {% endfor %}
+                </ol>
+                <div class="carousel-inner">
+                    {% for midia in acao.midias.all %}
+                        {% if forloop.counter0 == 0 %}
+                            <div class="carousel-item active">
+                                <img class="d-block w-100" style="width: 100%;" src="{{midia.midia.url}}">
+                            </div>
+                        {% else %}
+                            <div class="carousel-item">
+                                <img class="d-block w-100" style="width: 100%;" src="{{midia.midia.url}}">
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <a id="anchor_prev" class="carousel-control-prev" href="#indicators" role="button" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Anterior</span>
+                </a>
+                <a id="anchor_next" class="carousel-control-next" href="#indicators" role="button" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Próxima</span>
+                </a>
             </div>
         </div>
     </div>

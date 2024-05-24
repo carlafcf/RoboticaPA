@@ -21,6 +21,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from PlanoAula import views as plano_aula_views
 
+handler404 = 'RoboticaPA.views.custom_404'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', plano_aula_views.home, name='home'),

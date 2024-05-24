@@ -5,9 +5,11 @@ from django.utils import timezone
 from Usuario.models import Usuario
 
 TIPO = [
-    ('Evento', 'Evento'),
+    ('Competição', 'Competição'),
     ('Curso', 'Curso'),
-    ('Palestra', 'Palestra')
+    ('Evento', 'Evento'),
+    ('Palestra', 'Palestra'),
+    ('Outro', 'Outro')
 ]
 
 def user_directory_path(instance, filename):
@@ -16,7 +18,7 @@ def user_directory_path(instance, filename):
 
 class Acoes(models.Model):
     titulo = models.CharField(max_length=500, verbose_name="Título")
-    tipo = models.CharField(max_length=8, choices=TIPO, default='Evento')
+    tipo = models.CharField(max_length=20, choices=TIPO, default='Evento')
     data_inicio = models.DateField(default = date.today, verbose_name = "Data de início")
     data_fim = models.DateField(null=True, blank = True, verbose_name = "Data de fim")
     local = models.CharField(max_length=200, null=True, blank=True, verbose_name="Local")
@@ -35,7 +37,7 @@ class Acoes(models.Model):
 
 class Midia(models.Model):
     acao = models.ForeignKey(Acoes, on_delete=models.RESTRICT,verbose_name="Ação", related_name='midias')
-    midia = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
+    midia = models.ImageField(upload_to=user_directory_path, blank=True, null=True, verbose_name='Mídias')
     data = models.DateTimeField(verbose_name = "Data", auto_now_add=True)
 
     def __str__(self):

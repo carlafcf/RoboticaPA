@@ -16,5 +16,6 @@ urlpatterns = [
     path('deletar-mensagem/<int:pk>/', views.deletar_mensagem, name='deletar_mensagem'),
 
     path('editar-midia/<int:pk>/', views.editar_midia, name='editar_midia'),
+    path('deletar-midia/<int:pk>/', views.deletar_midia, name='deletar_midia'),
 
 ]

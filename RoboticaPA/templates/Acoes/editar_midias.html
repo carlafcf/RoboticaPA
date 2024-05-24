@@ -10,6 +10,7 @@
 
 <div class="container">
 
+    <p class="text-uppercase font-weight-bold"><a href="{% url 'acoes:detalhes' pk=acao.pk %}"><i class="fa fa-arrow-left"></i>&nbsp;&nbsp;{{acao.titulo}}</a></p>
     <p class="text-uppercase font-weight-bold">Mídias</p>
     
 
@@ -17,18 +18,17 @@
         <div class="card-body p-3 overflow-auto">
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-
-                <!-- {{ form.midia|as_crispy_field }} -->
-                {{form}}
+                {{form_nova_midia.midia|as_crispy_field}}
                 <input class="btn btn-info col-lg-2" type="submit" value="Inserir" />
             </form>
         </div>
         <div class="container row">
             {% for midia in midias_acao %}
                 <div class="col-lg-2 col-md-4 col-6">
-                    <a href="" data-bs-toggle="modal" data-bs-target="#modalMidia" 
+                    <a href="" data-bs-toggle="modal" data-bs-target="#lightbox" 
                             data-bs-midia-url="{{midia.midia.url}}" class="text-xxs">
-                        <img src="{{ midia.midia.url }}" style="max-height: 100px;max-width: 100px;object-fit: contain;"/>
+                        <img src="{{ midia.midia.url }}" style="max-height: 100px;max-width: 100px;object-fit: contain;"
+                            data-bs-target="#indicators" data-bs-slide-to="{{forloop.counter0}}"/>
                     </a>
                 </div>
             {% empty %}
@@ -40,22 +40,103 @@
     
 </div>
 
-<div id="modalMidia" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+<div class="modal fade" id="lightbox" role="dialog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="btn close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <img id="midia_modal" style="width: 100%;" src="{{ midia.midia.url }}"/>
+            <button type="button" class="btn close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div id="indicators" class="carousel slide" data-interval="false">
+                <ol class="carousel-indicators">
+                    {% for midia in midias_acao %}
+                        {% if forloop.counter0 == 0 %}
+                            <li data-bs-target="#indicators" data-bs-slide-to="{{forloop.counter0}}" class="active"></li>
+                        {% else %}
+                            <li data-bs-target="#indicators" data-bs-slide-to="{{forloop.counter0}}"></li>
+                        {% endif %}
+                    {% endfor %}
+                </ol>
+                <div class="carousel-inner">
+                    {% for midia in midias_acao %}
+                        {% if forloop.counter0 == 0 %}
+                            <div class="container carousel-item active" style="position: relative;">
+                                <img class="d-block w-100" style="width: 100%;display: block;" src="{{midia.midia.url}}">
+                                <a href="" class="float-end" data-bs-toggle="modal" data-bs-target="#modalDeletar" data-bs-midia-id="{{midia.id}}">
+                                    <span class="badge badge-sm bg-gradient-danger" 
+                                            style="position: absolute; top:0; left:50%; transform: translate(-50%, 10%);">
+                                        Deletar
+                                    </span>
+                                </a>
+                                <a href="" class="float-end" data-bs-toggle="modal" data-bs-target="#modalDeletar" data-bs-midia-id="{{midia.id}}">
+                                    <span class="badge badge-sm bg-gradient-gray" 
+                                            style="position: absolute; top:0; left:50%; transform: translate(-50%, 10%);">
+                                        Cancelar
+                                    </span>
+                                </a>
+                                <a href="" class="float-end" data-bs-toggle="modal" data-bs-target="#modalDeletar" data-bs-midia-id="{{midia.id}}">
+                                    <span class="badge badge-sm bg-gradient-danger" 
+                                            style="position: absolute; top:0; left:50%; transform: translate(-50%, 10%);">
+                                        Deletar
+                                    </span>
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="container carousel-item" style="position: relative;">
+                                <img class="d-block w-100" style="width: 100%;display: block;" src="{{midia.midia.url}}">
+                                <a id="anchor_deletar_1_{{midia.pk}}" href="javascript:;" class="float-end" onclick="return deletar({{midia.pk}})" style="display: block">
+                                    <span class="badge badge-sm bg-gradient-danger" 
+                                            style="position: absolute; top:0; left:50%; transform: translate(-50%, 10%);">
+                                        Deletar
+                                    </span>
+                                </a>
+                                <a id="anchor_cancelar_{{midia.pk}}" href="javascript:;" class="float-end" onclick="return cancelar({{midia.pk}})" style="display: none">
+                                    <span class="badge badge-sm bg-gradient-dark" 
+                                            style="position: absolute; top:0; left:30%; transform: translate(-30%, 10%);">
+                                        Cancelar
+                                    </span>
+                                </a>
+                                <a id="anchor_deletar_{{midia.pk}}" href="{% url 'acoes:deletar_midia' pk=midia.pk %}" class="float-end" style="display: none">
+                                    <span class="badge badge-sm bg-gradient-danger" 
+                                            style="position: absolute; top:0; left:60%; transform: translate(-60%, 10%);">
+                                        Deletar
+                                    </span>
+                                </a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <a id="anchor_prev" class="carousel-control-prev" href="#indicators" role="button" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Anterior</span>
+                </a>
+                <a id="anchor_next" class="carousel-control-next" href="#indicators" role="button" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Próxima</span>
+                </a>
             </div>
         </div>
     </div>
 </div>
 
-
+<div id="modalDeletar" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Deletar mídia</h5>
+                <button type="button" class="btn close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Deseja deletar a mídia selecionada?</p>
+            </div>
+            <div class="modal-footer">
+                <a id="anchor_deletar_midia" href="" class="btn btn-primary">Deletar</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 {% endblock %} 
@@ -63,12 +144,30 @@
 {% block scripts %}
 
 <script>
-    var modalMidia = document.getElementById('modalMidia')
-    modalMidia.addEventListener('show.bs.modal', function (event) {
+
+    function deletar(pk) {
+        document.getElementById('anchor_deletar_1_'+pk).style.display = 'none';
+        document.getElementById('anchor_cancelar_'+pk).style.display = 'block';
+        document.getElementById('anchor_deletar_'+pk).style.display = 'block';
+        document.getElementById('anchor_prev').style.display = 'none';
+        document.getElementById('anchor_next').style.display = 'none';
+    }
+
+    function cancelar(pk) {
+        document.getElementById('anchor_deletar_1_'+pk).style.display = 'block';
+        document.getElementById('anchor_cancelar_'+pk).style.display = 'none';
+        document.getElementById('anchor_deletar_'+pk).style.display = 'none';
+        document.getElementById('anchor_prev').style.display = 'block';
+        document.getElementById('anchor_next').style.display = 'block';
+    }
+
+    var modalDeletar = document.getElementById('modalDeletar')
+    modalDeletar.addEventListener('show.bs.modal', function (event) {
         var button = event.relatedTarget
-        var midiaURL = button.getAttribute('data-bs-midia-url')
-        var imgModal = document.getElementById('midia_modal')
-        midia_modal.src = midiaURL
+        var midiaID = button.getAttribute('data-bs-midia-id')
+        var anchor = document.getElementById('anchor_deletar_midia')
+        var stringHref = "/acoes/deletar-midia/" + midiaID
+        anchor.href = stringHref
     })
 </script>
 

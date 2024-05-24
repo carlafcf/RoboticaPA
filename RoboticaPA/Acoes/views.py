@@ -52,19 +52,32 @@ def editar_midia(request, pk):
     acao = Acoes.objects.get(id=pk)
 
     if (request.method == 'POST'):
+        print('post')
         form = FormNovaMidia(data=request.POST, files=request.FILES)
         if form.is_valid():
-            for file in request.FILES.getlist('listing_images'):
+            print('Válido')
+            print(request.FILES.getlist('midia'))
+            for file in request.FILES.getlist('midia'):
                 Midia.objects.create(acao=acao, midia=file)
+        return redirect('acoes:editar_midia', pk=pk)
     else:
         midias_acao = Midia.objects.filter(acao__id = pk)
 
         informacoes =  {
+            'acao': acao,
             'midias_acao': midias_acao,
             'form_nova_midia': FormNovaMidia()
         }
 
         return render(request, "Acoes/editar_midias.html", informacoes)
+
+def deletar_midia(request, pk):
+    midia = Midia.objects.get(id=pk)
+    acao = Acoes.objects.get(id=midia.acao.pk)
+
+    midia.delete()
+
+    return redirect('acoes:editar_midia', pk=acao.pk)
 
 class EditarMidia(generic.DetailView):
     model = Midia
